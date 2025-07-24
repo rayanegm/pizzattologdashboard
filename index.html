@@ -304,4 +304,326 @@
 
                 <div class="coluna-direita">
                     <label for="agendamento">Agendamento</label>
-                    <input type="datetime
+                    <input type="datetime-local" id="agendamento" name="agendamento" required />
+
+                    <label for="inicio">Início</label>
+                    <input type="datetime-local" id="inicio" name="inicio" required />
+
+                    <label for="chegada">Chegada</label>
+                    <input type="datetime-local" id="chegada" name="chegada" required />
+
+                    <label for="termino">Término</label>
+                    <input type="datetime-local" id="termino" name="termino" required />
+                </div>
+            </div>
+
+            <button type="submit" id="btnEnviar">ENVIAR</button>
+        </form>
+
+        <div id="lista-funcionarios">
+            <h2>Funcionários</h2>
+            <div id="funcionarios-lista"></div>
+
+            <button id="btn-add-funcionario" style="margin-top: 20px; padding: 10px 15px; background: #007bff; color: white; border:none; border-radius: 8px; cursor:pointer;">
+                ➕ Adicionar Funcionário
+            </button>
+        </div>
+
+        <div id="formFuncionarioModal" class="modal-overlay">
+            <form id="formFuncionario" class="modal-content"> 
+                <h2>Adicionar Funcionário</h2>
+
+                <label for="nomeFuncionario">Nome</label>
+                <input type="text" id="nomeFuncionario" required />
+
+                <label for="cargoFuncionario">Cargo</label>
+                <input type="text" id="cargoFuncionario" required />
+
+                <label for="turnoFuncionario">Turno</label>
+                <select id="turnoFuncionario" name="turno" required>
+                    <option value="">Selecione</option>
+                    <option value="1º Turno">1º Turno</option>
+                    <option value="2º Turno">2º Turno</option>
+                    <option value="3º Turno">3º Turno</option>
+                </select>
+
+                <label for="fotoFuncionario">Foto (PNG)</label>
+                <input type="file" id="fotoFuncionario" accept="image/png" required />
+
+                <button type="submit" style="background: #28a745; color: white;">Salvar</button>
+                <button type="button" id="btn-cancelar" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
+            </form>
+        </div>
+
+        <div id="senhaFuncionarioModal" class="modal-overlay">
+            <div class="modal-content">
+                <h2>Autorização</h2>
+                <label for="senhaAddFuncionario">Digite a senha:</label>
+                <input type="password" id="senhaAddFuncionario" required />
+                <button id="btn-verificar-senha-funcionario" style="background: #007bff; color: white;">Verificar</button>
+                <button id="btn-cancelar-senha-funcionario" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
+                <p id="mensagem-senha-funcionario" class="modal-message"></p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const scriptURL = "https://script.google.com/macros/s/AKfycbz6-CXKtNpADlovxRI-_azS_StszRxwdbqzqT8R4BxYeF4fmU035EXiaQyg-lTi5AQ48w"; 
+
+        // --- Elementos do Painel (agora visíveis por padrão) ---
+        const mainContent = document.getElementById('main-content');
+        const headerTopo = document.querySelector('.topo');
+
+        // --- Elementos do Modal de Adicionar Funcionário ---
+        const tabs = document.querySelectorAll('.tab');
+        const formOperacoes = document.getElementById('formulario');
+        const divFuncionarios = document.getElementById('lista-funcionarios');
+        const listaFuncionariosDiv = document.getElementById('funcionarios-lista');
+        const btnAddFuncionario = document.getElementById('btn-add-funcionario');
+        const formFuncionarioModal = document.getElementById('formFuncionarioModal'); 
+        const formFuncionario = document.getElementById('formFuncionario');
+        const btnCancelar = document.getElementById('btn-cancelar');
+
+        // --- Elementos do Modal de Senha para Adicionar Funcionário ---
+        const senhaFuncionarioModal = document.getElementById('senhaFuncionarioModal');
+        const senhaAddFuncionarioInput = document.getElementById('senhaAddFuncionario');
+        const btnVerificarSenhaFuncionario = document.getElementById('btn-verificar-senha-funcionario');
+        const btnCancelarSenhaFuncionario = document.getElementById('btn-cancelar-senha-funcionario');
+        const mensagemSenhaFuncionario = document.getElementById('mensagem-senha-funcionario');
+
+        const SENHA_CORRETA_ADD_FUNCIONARIO = "davidmend123"; // Senha específica para o modal de adicionar funcionário
+
+        function mostrarOutroCampo(select) {
+            const campoOutro = document.getElementById('campoOutro');
+            if(select.value === 'outro'){
+                campoOutro.style.display = 'block';
+                document.getElementById('outraTransportadora').setAttribute('required', 'required');
+            } else {
+                campoOutro.style.display = 'none';
+                document.getElementById('outraTransportadora').removeAttribute('required');
+            }
+        }
+
+        // --- Lógica para Alternar Abas (Operações / Funcionários) ---
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                if (tab.dataset.tab === 'operacoes') {
+                    formOperacoes.style.display = 'block';
+                    divFuncionarios.style.display = 'none';
+                } else {
+                    formOperacoes.style.display = 'none';
+                    divFuncionarios.style.display = 'block';
+                    carregarFuncionarios(); // Chama a função ao mudar para a aba de funcionários
+                }
+            });
+        });
+
+        // --- Função para Carregar Funcionários (AGORA CORRIGIDA PARA POST) ---
+        async function carregarFuncionarios(){
+            try {
+                // Prepara os dados para o POST, incluindo a ação
+                const formData = {
+                    action: 'getFuncionarios',
+                    sheet: 'Funcionarios'
+                };
+
+                const res = await fetch(scriptURL, { // scriptURL sem parâmetros na URL
+                    method: 'POST', // Mudei para POST
+                    headers: {
+                        'Content-Type': 'application/json' // Indique que o corpo é JSON
+                    },
+                    body: JSON.stringify(formData) // Envia os dados como JSON no corpo
+                });
+
+                if(!res.ok) throw new Error('Erro ao buscar funcionários: ' + res.statusText);
+                const data = await res.json();
+
+                listaFuncionariosDiv.innerHTML = ''; // Limpa a lista antes de preencher
+
+                if(data.length === 0){
+                    listaFuncionariosDiv.innerHTML = '<p>Nenhum funcionário cadastrado.</p>';
+                    return;
+                }
+
+                data.forEach(f => {
+                    const card = document.createElement('div');
+                    card.classList.add('funcionario-card');
+                    card.setAttribute('data-turno', f.turno);
+                    card.innerHTML = `
+                        <img src="${f.foto || 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png'}" alt="${f.nome}" class="funcionario-foto" />
+                        <div class="funcionario-info">
+                            <div class="funcionario-nome">${f.nome}</div>
+                            <div class="funcionario-cargo">${f.cargo}</div>
+                            <div class="funcionario-turno">${f.turno}</div>
+                        </div>
+                    `;
+                    listaFuncionariosDiv.appendChild(card);
+                });
+            } catch (error) {
+                listaFuncionariosDiv.innerHTML = `<p>Erro ao carregar funcionários: ${error.message}</p>`;
+                console.error("Erro em carregarFuncionarios:", error); // Adicionado para depuração
+            }
+        }
+
+        // --- Lógica do Botão "Adicionar Funcionário" (agora mostra o modal de senha) ---
+        btnAddFuncionario.addEventListener('click', () => {
+            senhaFuncionarioModal.style.display = 'flex'; // Abre o modal de senha
+            senhaAddFuncionarioInput.value = ''; // Limpa o campo de senha
+            mensagemSenhaFuncionario.textContent = ''; // Limpa a mensagem de erro
+            senhaAddFuncionarioInput.focus();
+        });
+
+        // --- Lógica para Verificar a Senha do Modal "Adicionar Funcionário" ---
+        btnVerificarSenhaFuncionario.addEventListener('click', () => {
+            const senhaDigitada = senhaAddFuncionarioInput.value;
+            if (senhaDigitada === SENHA_CORRETA_ADD_FUNCIONARIO) { 
+                mensagemSenhaFuncionario.textContent = '';
+                senhaFuncionarioModal.style.display = 'none'; // Fecha o modal de senha
+                abrirModalFuncionario(); // Abre o modal de adicionar funcionário
+            } else {
+                mensagemSenhaFuncionario.textContent = 'Senha incorreta.';
+                senhaAddFuncionarioInput.value = ''; 
+            }
+        });
+
+        // --- Lógica para Cancelar o Modal de Senha do Funcionário ---
+        btnCancelarSenhaFuncionario.addEventListener('click', () => {
+            senhaFuncionarioModal.style.display = 'none'; // Fecha o modal de senha
+            senhaAddFuncionarioInput.value = '';
+            mensagemSenhaFuncionario.textContent = '';
+        });
+
+        // --- Função para Abrir o Formulário de Adicionar Funcionário ---
+        function abrirModalFuncionario(){
+            formFuncionarioModal.style.display = 'flex'; // Torna o modal de formulário visível
+            formFuncionario.reset(); // Limpa o formulário de funcionário
+        }
+
+        // --- Lógica para Cancelar o Formulário de Adicionar Funcionário ---
+        btnCancelar.addEventListener('click', () => {
+            formFuncionarioModal.style.display = 'none'; // Fecha o modal do formulário
+        });
+
+        // --- Lógica para Salvar Funcionário no Google Sheets ---
+        formFuncionario.addEventListener('submit', async e => {
+            e.preventDefault();
+
+            const nome = document.getElementById('nomeFuncionario').value.trim();
+            const cargo = document.getElementById('cargoFuncionario').value.trim();
+            const turno = document.getElementById('turnoFuncionario').value; 
+            const fotoInput = document.getElementById('fotoFuncionario');
+
+            if(!nome || !cargo || !turno || fotoInput.files.length === 0){
+                alert('Por favor, preencha todos os campos e selecione uma foto PNG.');
+                return;
+            }
+
+            const file = fotoInput.files[0];
+            if(!file || file.type !== 'image/png'){
+                alert('Por favor, selecione uma imagem PNG válida.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async function(){
+                const base64 = reader.result;
+
+                const formData = {
+                    action: 'addFuncionario',
+                    sheet: 'Funcionarios',
+                    nome: nome,
+                    cargo: cargo,
+                    turno: turno,
+                    foto: base64
+                };
+
+                try {
+                    const res = await fetch(scriptURL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+                    if(!res.ok) throw new Error('Erro ao enviar funcionário: ' + res.statusText);
+                    const json = await res.json();
+                    if(json.status === 'success'){
+                        alert('Funcionário adicionado com sucesso!');
+                        formFuncionarioModal.style.display = 'none'; // Fecha o modal do formulário
+                        carregarFuncionarios(); // Recarrega a lista
+                    } else {
+                        throw new Error(json.message || 'Erro desconhecido');
+                    }
+                } catch (error) {
+                    alert('Erro: ' + error.message);
+                    console.error("Erro ao adicionar funcionário:", error); // Adicionado para depuração
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // --- Envio formulário Operações (mantido do código anterior) ---
+        formOperacoes.addEventListener('submit', async e => {
+            e.preventDefault();
+
+            const select = document.getElementById('transportadora');
+            const inputOutro = document.getElementById('outraTransportadora');
+
+            if(select.value === 'outro' && inputOutro.value.trim() === ''){
+                alert('Por favor, preencha o nome da transportadora.');
+                inputOutro.focus();
+                return;
+            }
+
+            const btnEnviar = document.getElementById('btnEnviar');
+            btnEnviar.textContent = 'Enviando...';
+            btnEnviar.disabled = true;
+
+            const data = {
+                action: 'addOperacao',
+                cte: formOperacoes.cte.value,
+                destino_origem: formOperacoes.destino_origem.value,
+                placa: formOperacoes.placa.value,
+                transportadora: select.value === 'outro' ? inputOutro.value.trim() : select.value,
+                pallets: formOperacoes.pallets.value,
+                carga_descarga: formOperacoes.carga_descarga.value,
+                agendamento: formOperacoes.agendamento.value,
+                chegada: formOperacoes.chegada.value,
+                inicio: formOperacoes.inicio.value,
+                termino: formOperacoes.termino.value,
+                turno: "N/A"
+            };
+
+            try {
+                const res = await fetch(scriptURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if(!res.ok) throw new Error('Erro no envio dos dados: ' + res.statusText);
+                const json = await res.json();
+                if(json.status === 'success'){
+                    alert('Dados enviados com sucesso!');
+                    formOperacoes.reset();
+                    document.getElementById('campoOutro').style.display = 'none';
+                } else {
+                    throw new Error(json.message || 'Erro desconhecido');
+                }
+            } catch (error) {
+                alert('Erro ao enviar dados: ' + error.message);
+                console.error("Erro ao enviar operações:", error); // Adicionado para depuração
+            } finally {
+                btnEnviar.textContent = 'ENVIAR';
+                btnEnviar.disabled = false;
+            }
+        });
+
+        // Inicializa: o painel principal e o cabeçalho já estão visíveis no HTML.
+        // Apenas oculta o formulário de funcionários inicialmente.
+        document.addEventListener('DOMContentLoaded', () => {
+            formOperacoes.style.display = 'block'; 
+            divFuncionarios.style.display = 'none'; 
+        });
+    </script>
+</body>
+</html>

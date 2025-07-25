@@ -54,7 +54,7 @@
             flex-shrink: 0; /* Impede que as abas encolham */
             background: rgba(0,123,255,0.15);
             color: #004085;
-            padding: 8px 15px; /* Ajustado um pouco o padding para melhor visualização */
+            padding: 6px 12px; /* Ajustado um pouco o padding para melhor visualização */
             text-align: center;
             border-radius: 8px; /* Borda um pouco mais arredondada */
             cursor: pointer;
@@ -62,7 +62,7 @@
             transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
             user-select: none;
             position: relative;
-            font-size: 14px; /* Texto um pouco maior para melhor leitura */
+            font-size: 12px; /* Texto um pouco maior para melhor leitura */
             min-width: 120px; /* Largura mínima para cada aba */
             white-space: nowrap; /* Impede que o texto da aba quebre */
         }
@@ -613,7 +613,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // ----------------------------------------------------
         // CONFIGURAÇÕES DO SUPABASE - PREENCHA COM SEUS DADOS REAIS!
@@ -684,14 +684,22 @@
 
         // Função para mostrar/esconder abas e carregar dados
         function showTabContent(tabName) {
+            // Remove a classe 'active' de todas as abas (os botões no header)
             tabs.forEach(t => t.classList.remove('active'));
+            // Esconde todos os conteúdos das abas (as divs de conteúdo)
             tabContents.forEach(content => content.classList.remove('active'));
 
+            // Adiciona a classe 'active' na aba clicada
             const activeTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
-            if (activeTab) activeTab.classList.add('active');
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
 
+            // Mostra o conteúdo da aba clicada
             const activeContent = document.getElementById(`${tabName}-content`);
-            if (activeContent) activeContent.classList.add('active');
+            if (activeContent) {
+                activeContent.classList.add('active');
+            }
 
             // --- CONTROLE DE VISIBILIDADE DO BOTÃO FLUTUANTE ---
             if (tabName === 'colaboradores') {
@@ -699,16 +707,15 @@
             } else {
                 fabAddColaborador.style.display = 'none';
             }
+            // ----------------------------------------------------
 
             // Lógica para carregar dados ou gerenciar assinaturas Realtime
             if (tabName === 'colaboradores') {
                 carregarColaboradores();
-            }
-            // Inicializa e gerencia a assinatura Realtime para Indicadores
-            if (tabName === 'indicadores') {
+            } else if (tabName === 'indicadores') {
                 carregarIndicadores(); // Esta função agora também inicia a assinatura realtime
             } else {
-                // Se sair da aba de indicadores, remova a assinatura para evitar vazamentos de memória e requisições desnecessárias
+                // Se sair da aba de indicadores, remova a assinatura para evitar vazamentos de memória
                 if (realtimeSubscriptionOperacoes) {
                     supabase.removeChannel(realtimeSubscriptionOperacoes);
                     realtimeSubscriptionOperacoes = null;
@@ -718,7 +725,7 @@
 
             if (tabName === 'dialogos') {
                 carregarFotosDDS();
-                formDialogosFoto.style.display = 'none';
+                formDialogosFoto.style.display = 'none'; // Esconde o formulário de upload DDS por padrão
             }
         }
 
@@ -735,7 +742,6 @@
                 const card = document.createElement('div');
                 card.className = 'colaborador-card';
 
-                // As chaves do objeto colaborador devem corresponder aos nomes das colunas no Supabase
                 const fotoUrl = colaborador.foto_url || 'https://via.placeholder.com/100/CCCCCC/FFFFFF?text=Sem+Foto';
                 const nome = colaborador.nome || 'Não Informado';
                 const turno = colaborador.turno || 'Não Informado';
@@ -783,7 +789,7 @@
 
                 if (data && data.length > 0) {
                     todosColaboradoresCarregados = data;
-                    filtrarColaboradores();
+                    filtrarColaboradores(); // Aplica os filtros atuais ao carregar
                 } else {
                     listaColaboradoresDiv.innerHTML = '<p>Nenhum colaborador cadastrado.</p>';
                     todosColaboradoresCarregados = [];
@@ -799,11 +805,10 @@
             const fotosContainer = document.getElementById('fotosDSS');
             fotosContainer.innerHTML = '<p>Carregando fotos de DDS...</p>';
             try {
-                // Consulta a tabela dialogos_seguranca
                 const { data: dialogos, error: dialogosError } = await supabase
                     .from('dialogos_seguranca')
-                    .select('foto_url') // Seleciona apenas a coluna da URL da foto
-                    .order('created_at', { ascending: false }); // Ordena para as mais recentes primeiro
+                    .select('foto_url')
+                    .order('created_at', { ascending: false }); // As mais recentes primeiro
 
                 if (dialogosError) {
                     throw dialogosError;
@@ -829,11 +834,9 @@
             }
         }
 
-        // Função para carregar e exibir indicadores (agora com Realtime)
         async function carregarIndicadores() {
             const ctx = document.getElementById('graficoIndicadores').getContext('2d');
 
-            // Destrua a instância do gráfico e a assinatura anterior se existirem
             if (chartInstance) {
                 chartInstance.destroy();
             }
@@ -843,17 +846,15 @@
             }
 
             try {
-                // Carregar os dados iniciais do gráfico
                 const { data: operacoes, error } = await supabase
                     .from('operacoes')
-                    .select('transportadora, created_at'); // Seleciona apenas as colunas necessárias
+                    .select('transportadora, created_at');
 
                 if (error) {
                     throw error;
                 }
 
                 if (operacoes && operacoes.length > 0) {
-                    // Lógica de agregação no frontend (exemplo simples: contagem por transportadora)
                     const contagemPorTransportadora = {};
                     operacoes.forEach(op => {
                         const transportadora = op.transportadora || 'Não Informado';
@@ -896,71 +897,129 @@
                         }
                     });
                 } else {
-                    if (chartInstance) chartInstance.destroy(); // Destroi se não houver dados
-                    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                    const indicadoresDiv = document.getElementById('indicadores-content');
-                    indicadoresDiv.innerHTML = '<h2>INDICADORES DE REGISTRO</h2><p>Nenhum dado de indicador disponível ou erro no formato.</p>';
+                    if (chartInstance) chartInstance.destroy();
+                    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Limpa o canvas
+                    ctx.font = "16px Arial";
+                    ctx.fillStyle = "red";
+                    ctx.textAlign = "center";
+                    ctx.fillText("Nenhum dado de operações encontrado.", ctx.canvas.width / 2, ctx.canvas.height / 2);
+                    console.warn("Nenhum dado de operações encontrado para o gráfico.");
                 }
 
-                // --- Configuração da Assinatura Realtime ---
+                // Configurar assinatura Realtime para a tabela 'operacoes'
                 realtimeSubscriptionOperacoes = supabase
-                    .channel('public:operacoes') // Canal para a tabela 'operacoes'
+                    .channel('public:operacoes')
                     .on('postgres_changes', { event: '*', schema: 'public', table: 'operacoes' }, payload => {
-                        console.log('Mudança em tempo real detectada na tabela operacoes!', payload);
-                        // Ao detectar uma mudança, recarrega o gráfico
-                        carregarIndicadores();
+                        console.log('Mudança Realtime detectada na tabela "operacoes":', payload);
+                        carregarIndicadores(); // Recarrega os indicadores quando há uma mudança
                     })
-                    .subscribe(); // Inicia a escuta por mudanças
+                    .subscribe();
+
+                console.log("Assinatura Realtime para indicadores iniciada.");
 
             } catch (error) {
-                console.error('Erro geral ao carregar indicadores:', error.message);
+                console.error('Erro ao carregar indicadores do Supabase:', error.message);
                 if (chartInstance) chartInstance.destroy();
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                const indicadoresDiv = document.getElementById('indicadores-content');
-                indicadoresDiv.innerHTML = `<h2>INDICADORES DE REGISTRO</h2><p style="color: red;">Erro ao carregar dados do gráfico: ${error.message}</p>`;
+                ctx.font = "16px Arial";
+                ctx.fillStyle = "red";
+                ctx.textAlign = "center";
+                ctx.fillText(`Erro ao carregar indicadores: ${error.message}`, ctx.canvas.width / 2, ctx.canvas.height / 2);
             }
         }
 
+        // --- Funções de Eventos e Submissões (INTEGRADO COM SUPABASE) ---
 
-        // --- Event Listeners ---
-
-        document.addEventListener('DOMContentLoaded', () => {
-            showTabContent('formulario'); // Mostra o formulário como aba inicial
-
-            // Event Listeners para as abas
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    showTabContent(tab.dataset.tab);
-                });
+        // Event Listeners para as abas
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                showTabContent(tabName);
             });
+        });
 
-            // Event listener para o formulário de operações
+        // Event Listener para o botão flutuante de adicionar colaborador
+        if (fabAddColaborador) {
+            fabAddColaborador.addEventListener('click', () => {
+                senhaColaboradorModal.style.display = 'flex';
+                mensagemSenhaColaborador.textContent = ''; // Limpa a mensagem
+                senhaAddColaboradorInput.value = ''; // Limpa o campo
+            });
+        }
+
+        // Event Listener para verificar a senha de colaborador
+        if (btnVerificarSenhaColaborador) {
+            btnVerificarSenhaColaborador.addEventListener('click', () => {
+                const senhaDigitada = senhaAddColaboradorInput.value;
+                if (senhaDigitada === SENHA_COLABORADORES) {
+                    senhaColaboradorModal.style.display = 'none';
+                    formColaboradorModal.style.display = 'flex';
+                    formAdicionarColaborador.reset(); // Limpa o formulário ao abrir
+                } else {
+                    mensagemSenhaColaborador.textContent = 'Senha incorreta!';
+                }
+            });
+        }
+
+        // Event Listener para cancelar o modal de senha de colaborador
+        if (btnCancelarSenhaColaborador) {
+            btnCancelarSenhaColaborador.addEventListener('click', () => {
+                senhaColaboradorModal.style.display = 'none';
+            });
+        }
+
+        // Event Listener para cancelar o formulário de adicionar colaborador
+        if (btnCancelarAddColaborador) {
+            btnCancelarAddColaborador.addEventListener('click', () => {
+                formColaboradorModal.style.display = 'none';
+            });
+        }
+
+        // Event Listener para o botão de abrir upload DDS
+        if (btnAbrirUploadDDS) {
+            btnAbrirUploadDDS.addEventListener('click', () => {
+                senhaDDSModal.style.display = 'flex';
+                mensagemSenhaDDS.textContent = ''; // Limpa a mensagem
+                senhaDDSInput.value = ''; // Limpa o campo
+            });
+        }
+
+        // Event Listener para verificar a senha DDS
+        if (btnVerificarSenhaDDS) {
+            btnVerificarSenhaDDS.addEventListener('click', () => {
+                const senhaDigitada = senhaDDSInput.value;
+                if (senhaDigitada === SENHA_DDS) {
+                    senhaDDSModal.style.display = 'none';
+                    formDialogosFoto.style.display = 'block'; // Mostra o formulário de upload
+                    fotoDDSInput.value = ''; // Limpa o input de arquivo
+                } else {
+                    mensagemSenhaDDS.textContent = 'Senha incorreta!';
+                }
+            });
+        }
+
+        // Event Listener para cancelar o modal de senha DDS
+        if (btnCancelarSenhaDDS) {
+            btnCancelarSenhaDDS.addEventListener('click', () => {
+                senhaDDSModal.style.display = 'none';
+            });
+        }
+
+        // Submissão do formulário de operações
+        if (formularioOperacoes) {
             formularioOperacoes.addEventListener('submit', async (event) => {
                 event.preventDefault();
 
-                const transportadoraSelecionada = document.getElementById('transportadora').value;
-                const transportadoraFinal = transportadoraSelecionada === 'outro' ?
-                                           document.getElementById('outraTransportadora').value :
-                                           transportadoraSelecionada;
-
-                const dadosOperacao = {
-                    cte: document.getElementById('cte').value,
-                    destino_origem: document.getElementById('destino_origem').value,
-                    placa: document.getElementById('placa').value,
-                    transportadora: transportadoraFinal,
-                    pallets: parseInt(document.getElementById('pallets').value), // Garante que seja número
-                    carga_descarga: document.getElementById('carga_descarga').value,
-                    agendamento: document.getElementById('agendamento').value,
-                    inicio: document.getElementById('inicio').value,
-                    chegada: document.getElementById('chegada').value,
-                    termino: document.getElementById('termino').value
-                    // created_at será preenchido automaticamente pelo DEFAULT now() no Supabase
-                };
+                const transportadoraSelect = document.getElementById('transportadora');
+                const transportadora = transportadoraSelect.value === 'outro' ? document.getElementById('outraTransportadora').value : transportadoraSelect.value;
+                const placa = document.getElementById('placa').value;
+                const motorista = document.getElementById('motorista').value;
+                const operacao = document.getElementById('operacao').value;
 
                 try {
                     const { data, error } = await supabase
                         .from('operacoes')
-                        .insert([dadosOperacao]);
+                        .insert([{ transportadora, placa, motorista, operacao }]);
 
                     if (error) {
                         throw error;
@@ -968,43 +1027,16 @@
 
                     alert('Operação registrada com sucesso!');
                     formularioOperacoes.reset();
-                    document.getElementById('campoOutro').style.display = 'none'; // Esconde o campo "Outro"
+                    mostrarOutroCampo(transportadoraSelect); // Reseta a visibilidade do campo "outro"
                 } catch (error) {
-                    console.error('Erro ao registrar operação no Supabase:', error.message);
-                    alert(`Erro ao registrar operação: ${error.message}. Verifique o console para mais detalhes.`);
+                    console.error('Erro ao registrar operação:', error.message);
+                    alert(`Erro ao registrar operação: ${error.message}`);
                 }
             });
+        }
 
-            // Event listeners para filtros de colaboradores
-            pesquisaNomeColaboradoresInput.addEventListener('input', filtrarColaboradores);
-            filtroTurnoColaboradoresSelect.addEventListener('change', filtrarColaboradores);
-
-            // Botão flutuante FAB (Add Colaborador)
-            fabAddColaborador.addEventListener('click', () => {
-                senhaColaboradorModal.style.display = 'flex';
-                senhaAddColaboradorInput.value = ''; // Limpa o campo de senha
-                mensagemSenhaColaborador.textContent = ''; // Limpa mensagem de erro
-            });
-
-            btnCancelarAddColaborador.addEventListener('click', () => {
-                formColaboradorModal.style.display = 'none';
-            });
-
-            btnVerificarSenhaColaborador.addEventListener('click', () => {
-                if (senhaAddColaboradorInput.value === SENHA_COLABORADORES) {
-                    senhaColaboradorModal.style.display = 'none';
-                    formColaboradorModal.style.display = 'flex';
-                    formAdicionarColaborador.reset(); // Limpa o formulário do modal
-                } else {
-                    mensagemSenhaColaborador.textContent = 'Senha incorreta.';
-                }
-            });
-
-            btnCancelarSenhaColaborador.addEventListener('click', () => {
-                senhaColaboradorModal.style.display = 'none';
-            });
-
-            // Formulário de Adicionar Colaborador
+        // Submissão do formulário de adicionar colaborador
+        if (formAdicionarColaborador) {
             formAdicionarColaborador.addEventListener('submit', async (event) => {
                 event.preventDefault();
 
@@ -1013,89 +1045,69 @@
                 const turno = document.getElementById('turnoColaborador').value;
                 const fotoFile = document.getElementById('fotoColaborador').files[0];
 
-                if (!fotoFile) {
-                    alert('Por favor, selecione uma foto para o colaborador.');
-                    return;
-                }
+                let fotoUrl = null;
 
                 try {
-                    // 1. Upload da foto para o Supabase Storage
-                    const filePath = `colaboradores/${Date.now()}_${fotoFile.name}`; // Nome único para o arquivo
-                    const { data: uploadData, error: uploadError } = await supabase.storage
-                        .from(bucketName)
-                        .upload(filePath, fotoFile, {
-                            cacheControl: '3600',
-                            upsert: false // Não substitui se já existir com o mesmo nome
-                        });
+                    if (fotoFile) {
+                        const fileExtension = fotoFile.name.split('.').pop();
+                        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
+                        const filePath = `colaboradores/${fileName}`;
 
-                    if (uploadError) {
-                        throw uploadError;
+                        const { data: uploadData, error: uploadError } = await supabase.storage
+                            .from(bucketName)
+                            .upload(filePath, fotoFile, {
+                                cacheControl: '3600',
+                                upsert: false
+                            });
+
+                        if (uploadError) {
+                            throw uploadError;
+                        }
+
+                        // Obter a URL pública da imagem
+                        const { data: publicUrlData } = supabase.storage
+                            .from(bucketName)
+                            .getPublicUrl(filePath);
+
+                        fotoUrl = publicUrlData.publicUrl;
                     }
 
-                    // 2. Obter a URL pública da foto
-                    const { data: publicUrlData } = supabase.storage
-                        .from(bucketName)
-                        .getPublicUrl(filePath);
-
-                    const fotoUrl = publicUrlData.publicUrl;
-
-                    // 3. Salvar dados do colaborador no Supabase Database
-                    const { error: dbError } = await supabase
+                    const { data, error } = await supabase
                         .from('colaboradores')
-                        .insert([
-                            { nome: nome, cargo: cargo, turno: turno, foto_url: fotoUrl }
-                        ]);
+                        .insert([{ nome, cargo, turno, foto_url: fotoUrl }]);
 
-                    if (dbError) {
-                        throw dbError;
+                    if (error) {
+                        throw error;
                     }
 
                     alert('Colaborador adicionado com sucesso!');
-                    formColaboradorModal.style.display = 'none';
+                    formAdicionarColaborador.reset();
+                    formColaboradorModal.style.display = 'none'; // Fecha o modal
                     carregarColaboradores(); // Recarrega a lista de colaboradores
                 } catch (error) {
                     console.error('Erro ao adicionar colaborador:', error.message);
-                    alert(`Erro ao adicionar colaborador: ${error.message}.`);
+                    alert(`Erro ao adicionar colaborador: ${error.message}`);
                 }
             });
+        }
 
-            // Lógica para upload de foto DDS
-            btnAbrirUploadDDS.addEventListener('click', () => {
-                senhaDDSModal.style.display = 'flex';
-                senhaDDSInput.value = '';
-                mensagemSenhaDDS.textContent = '';
-            });
+        // Submissão do formulário de upload de foto DDS
+        if (formDialogosFoto) {
+            formDialogosFoto.addEventListener('submit', async (event) => {
+                event.preventDefault();
 
-            btnCancelarSenhaDDS.addEventListener('click', () => {
-                senhaDDSModal.style.display = 'none';
-            });
-
-            btnVerificarSenhaDDS.addEventListener('click', () => {
-                if (senhaDDSInput.value === SENHA_DDS) {
-                    senhaDDSModal.style.display = 'none';
-                    formDialogosFoto.style.display = 'block'; // Mostra o formulário de upload
-                    fotoDDSInput.value = ''; // Limpa o input de arquivo
-                } else {
-                    mensagemSenhaDDS.textContent = 'Senha incorreta.';
-                }
-            });
-
-            btnEnviarFotoDDS.addEventListener('click', async () => {
                 const fotoFile = fotoDDSInput.files[0];
 
                 if (!fotoFile) {
-                    alert('Por favor, selecione uma foto para enviar.');
-                    return;
-                }
-
-                if (fotoFile.type !== 'image/png') {
-                    alert('Por favor, selecione um arquivo PNG.');
+                    alert('Por favor, selecione uma foto para upload.');
                     return;
                 }
 
                 try {
-                    // 1. Upload da foto para o Supabase Storage
-                    const filePath = `dds/${Date.now()}_${fotoFile.name}`; // Nome único para o arquivo
+                    const fileExtension = fotoFile.name.split('.').pop();
+                    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
+                    const filePath = `dialogos_seguranca/${fileName}`;
+
                     const { data: uploadData, error: uploadError } = await supabase.storage
                         .from(bucketName)
                         .upload(filePath, fotoFile, {
@@ -1107,30 +1119,51 @@
                         throw uploadError;
                     }
 
-                    // 2. Obter a URL pública da foto
+                    // Obter a URL pública da imagem
                     const { data: publicUrlData } = supabase.storage
                         .from(bucketName)
                         .getPublicUrl(filePath);
 
                     const fotoUrl = publicUrlData.publicUrl;
 
-                    // 3. Salvar a URL da foto na tabela dialogos_seguranca
-                    const { error: dbError } = await supabase
+                    const { data, error } = await supabase
                         .from('dialogos_seguranca')
                         .insert([{ foto_url: fotoUrl }]);
 
-                    if (dbError) {
-                        throw dbError;
+                    if (error) {
+                        throw error;
                     }
 
-                    alert('Foto DDS enviada com sucesso!');
-                    formDialogosFoto.style.display = 'none'; // Esconde o formulário após o envio
-                    carregarFotosDDS(); // Recarrega as fotos de DDS para mostrar a nova
+                    alert('Foto de Diálogo de Segurança enviada com sucesso!');
+                    formDialogosFoto.reset();
+                    formDialogosFoto.style.display = 'none'; // Esconde o formulário
+                    carregarFotosDDS(); // Recarrega as fotos de DDS
                 } catch (error) {
-                    console.error('Erro ao enviar foto DDS:', error.message);
-                    alert(`Erro ao enviar foto DDS: ${error.message}.`);
+                    console.error('Erro ao enviar foto de DDS:', error.message);
+                    alert(`Erro ao enviar foto de DDS: ${error.message}`);
                 }
             });
+        }
+
+        // Event Listeners para filtros de colaboradores
+        if (pesquisaNomeColaboradoresInput) {
+            pesquisaNomeColaboradoresInput.addEventListener('input', filtrarColaboradores);
+        }
+        if (filtroTurnoColaboradoresSelect) {
+            filtroTurnoColaboradoresSelect.addEventListener('change', filtrarColaboradores);
+        }
+
+        // --- Inicialização ao carregar a página ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mostra a primeira aba por padrão ao carregar a página
+            // Encontra a primeira aba e seu nome de dados
+            const firstTab = document.querySelector('.tab');
+            if (firstTab) {
+                const firstTabName = firstTab.dataset.tab;
+                showTabContent(firstTabName);
+            } else {
+                console.warn("Nenhuma aba encontrada. Verifique os elementos com a classe 'tab'.");
+            }
         });
     </script>
 </body>

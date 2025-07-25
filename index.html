@@ -10,366 +10,419 @@
         * {
             margin: 0; padding: 0; box-sizing: border-box;
         }
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background: url('https://i.postimg.cc/FzJfb8Yz/fundo.png') no-repeat center center fixed;
-            background-size: cover;
-            padding-top: 100px; /* Espaço para o topo fixo */
-            color: #222;
-            display: flex;
-            justify-content: flex-start; /* Alinha no topo e à esquerda */
-            align-items: center; /* Centraliza horizontalmente o conteúdo se for menor que a largura do body */
-            min-height: 100vh;
-            flex-direction: column;
-        }
-        .topo {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 40px;
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(8px);
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1100;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .logo {
-            max-width: 160px;
-            height: auto;
-            cursor: pointer;
-        }
-        /* --- Alterações aqui para as abas uma ao lado da outra --- */
-        .tabs {
-            display: flex; /* Adicionado: Ativa o Flexbox para alinhar horizontalmente */
-            flex-wrap: nowrap; /* Impede que as abas quebrem para a próxima linha */
-            gap: 10px; /* Aumentado um pouco o espaçamento entre as abas */
-            overflow-x: auto; /* Adicionado: Habilita scroll horizontal se as abas excederem a largura */
-            -webkit-overflow-scrolling: touch; /* Melhora o scroll em dispositivos iOS */
-            padding-bottom: 5px; /* Adicionado: Para dar espaço para a barra de rolagem se aparecer */
-        }
-        .tab {
-            flex-shrink: 0; /* Impede que as abas encolham */
-            background: rgba(0,123,255,0.15);
-            color: #004085;
-            padding: 8px 15px; /* Ajustado um pouco o padding para melhor visualização */
-            text-align: center;
-            border-radius: 8px; /* Borda um pouco mais arredondada */
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-            user-select: none;
-            position: relative;     
-            font-size: 14px; /* Texto um pouco maior para melhor leitura */
-            min-width: 120px; /* Largura mínima para cada aba */
-            white-space: nowrap; /* Impede que o texto da aba quebre */
-        }
-        /* --- Fim das alterações para abas --- */
+       body {
+    font-family: 'Open Sans', sans-serif;
+    background: url('https://i.postimg.cc/FzJfb8Yz/fundo.png') no-repeat center center fixed;
+    background-size: cover;
+    padding-top: 100px; /* Espaço para o topo fixo */
+    color: #222;
+    display: flex;
+    justify-content: flex-start; /* Alinha no topo e à esquerda */
+    align-items: center; /* Centraliza horizontalmente o conteúdo se for menor que a largura do body */
+    min-height: 100vh;
+    flex-direction: column;
+}
+.topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(8px);
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+/* ESTILO DO LOGO AJUSTADO AQUI */
+.logo {
+    max-width: 120px; /* Reduzido de 160px para 120px */
+    height: auto;
+    cursor: pointer;
+}
+/* --- Alterações aqui para as abas uma ao lado da outra --- */
+.tabs {
+    display: flex; /* Adicionado: Ativa o Flexbox para alinhar horizontalmente */
+    flex-wrap: nowrap; /* Impede que as abas quebrem para a próxima linha */
+    gap: 10px; /* Aumentado um pouco o espaçamento entre as abas */
+    overflow-x: auto; /* Adicionado: Habilita scroll horizontal se as abas excederem a largura */
+    -webkit-overflow-scrolling: touch; /* Melhora o scroll em dispositivos iOS */
+    padding-bottom: 5px; /* Adicionado: Para dar espaço para a barra de rolagem se aparecer */
+}
+.tab {
+    flex-shrink: 0; /* Impede que as abas encolham */
+    background: rgba(0,123,255,0.15);
+    color: #004085;
+    padding: 8px 15px; /* Ajustado um pouco o padding para melhor visualização */
+    text-align: center;
+    border-radius: 8px; /* Borda um pouco mais arredondada */
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    user-select: none;
+    position: relative;        
+    font-size: 14px; /* Texto um pouco maior para melhor leitura */
+    min-width: 120px; /* Largura mínima para cada aba */
+    white-space: nowrap; /* Impede que o texto da aba quebre */
+}
+/* --- Fim das alterações para abas --- */
 
-        .tab:hover {
-            background-color: rgba(0,123,255,0.35);
-            color: #002752;
-            box-shadow: 0 4px 10px rgba(0,123,255,0.4);
-        }
-        .tab.active {
-            background-color: #66b2ff;
-            color: white;
-            box-shadow: 0 4px 15px rgba(0,123,255,0.5);
-        }
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            left: 25%;
-            right: 25%;
-            bottom: 4px;
-            height: 3px;
-            background-color: white;
-            border-radius: 2px;
-        }
-        main {
-            max-width: 1000px;
-            margin: 60px auto; /* Mantém a margem para centralização horizontal */
-            background-color: transparent; /* Será preenchido pelos conteúdos das abas */
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            padding: 0; /* O padding será nos conteúdos internos */
-            min-height: 600px;
-            transition: opacity 0.5s ease-in-out;
-            width: 90%; /* Ajuste para não ficar muito largo em telas menores */
-            display: flex; /* Para flexibilizar o conteúdo interno */
-            flex-direction: column; /* Conteúdos empilhados verticalmente */
-            align-items: center; /* Centraliza o conteúdo das abas */
-            justify-content: flex-start; /* Alinha o conteúdo das abas no topo */
-        }
-        .tab-content {
-            background: transparent; /* Fundo transparente */
-            padding: 40px;             /* Mantém o espaçamento interno */
-            border-radius: 12px;       /* Pode manter para cantos arredondados */
-            box-shadow: none;          /* Remove sombra para não interferir */
-            width: 100%;
-            display: none;             /* continua escondido por padrão */
-        }
-        .tab-content.active {
-            display: block; /* Mostra o conteúdo ativo */
-        }
+.tab:hover {
+    background-color: rgba(0,123,255,0.35);
+    color: #002752;
+    box-shadow: 0 4px 10px rgba(0,123,255,0.4);
+}
+.tab.active {
+    background-color: #66b2ff;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,123,255,0.5);
+}
+.tab.active::after {
+    content: '';
+    position: absolute;
+    left: 25%;
+    right: 25%;
+    bottom: 4px;
+    height: 3px;
+    background-color: white;
+    border-radius: 2px;
+}
+main {
+    max-width: 1000px;
+    margin: 60px auto; /* Mantém a margem para centralização horizontal */
+    background-color: transparent; /* Será preenchido pelos conteúdos das abas */
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    padding: 0; /* O padding será nos conteúdos internos */
+    min-height: 600px;
+    transition: opacity 0.5s ease-in-out;
+    width: 90%; /* Ajuste para não ficar muito largo em telas menores */
+    display: flex; /* Para flexibilizar o conteúdo interno */
+    flex-direction: column; /* Conteúdos empilhados verticalmente */
+    align-items: center; /* Centraliza o conteúdo das abas */
+    justify-content: flex-start; /* Alinha o conteúdo das abas no topo */
+}
+.tab-content {
+    background: transparent; /* Fundo transparente */
+    padding: 40px;             /* Mantém o espaçamento interno */
+    border-radius: 12px;       /* Pode manter para cantos arredondados */
+    box-shadow: none;          /* Remove sombra para não interferir */
+    width: 100%;
+    display: none;             /* continua escondido por padrão */
+}
+.tab-content.active {
+    display: block; /* Mostra o conteúdo ativo */
+}
 
-        form {
-            width: 100%;
-        }
-        .form-grid {
-            display: flex;
-            justify-content: space-between;
-            gap: 40px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        .coluna-esquerda, .coluna-direita {
-            flex: 1;
-            min-width: 300px;
-        }
-        label {
-            font-weight: 600;
-            margin-bottom: 6px;
-            display: block;
-            color: #333;
-        }
-        input, select {
-            width: 100%;
-            padding: 12px 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            background: white;
-            box-sizing: border-box; /* Importante para width:100% com padding */
-        }
-        input:focus, select:focus {
-            border-color: #28a745;
-            outline: none;
-        }
-        button {
-            background-color: #28a745;
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-            padding: 14px;
-            width: 100%;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        #campoOutro {
-            margin-top: 10px;
-            display: none;
-        }
-        /* Lista Colaboradores */
-        #colaboradores-content {
-            /* Estilo para o contêiner da aba de colaboradores */
-            background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            max-width: 800px; /* Ajustado para ser centralizado dentro da main */
-            margin: auto; /* Centraliza */
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            display: none; /* Inicia escondido, controlado pelo JS */
-            min-height: 400px;
-            position: relative; /* Para posicionar o botão adicionar relativo a ele se não for flutuante */
-        }
-        .colaboradores-card {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
-        }
-        .colaboradores-card:last-child {
-            border-bottom: none;
-        }
-        .colaboradores-foto {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #007bff;
-        }
-        .colaboradores-info {
-            flex-grow: 1;
-        }
-        .colaboradores-nome {
-            font-weight: 700;
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-        .colaboradores-cargo,
-        .colaboradores-turno {
-            font-size: 14px;
-            color: #555;
-        }
-        /* Modal (geral para overlays) */
-        .modal-overlay {
-            display: none; /* Todos os overlays de modal começam escondidos */
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            flex-direction: column;
-        }
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            max-width: 400px;
-            width: 90%;
-            display: flex;
-            flex-direction: column;
-        }
-        .modal-content button {
-            margin-top: 20px;
-        }
-        .modal-content h2 {
-            margin-bottom: 20px;
-            color: #004085;
-            font-size: 24px;
-            text-align: center;
-        }
-        .modal-message {
-            color: red;
-            margin-top: 10px;
-            font-weight: 600;
-            text-align: center;
-        }
+form {
+    width: 100%;
+}
+.form-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+.coluna-esquerda, .coluna-direita {
+    flex: 1;
+    min-width: 300px;
+}
+label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #333;
+}
+input, select {
+    width: 100%;
+    padding: 12px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    background: white;
+    box-sizing: border-box; /* Importante para width:100% com padding */
+}
+input:focus, select:focus {
+    border-color: #28a745;
+    outline: none;
+}
+button {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 14px;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+button:hover {
+    background-color: #218838;
+}
+#campoOutro {
+    margin-top: 10px;
+    display: none;
+}
 
-        /* DDS - Diálogos de Segurança */
-        #dialogos-seguranca-content {
-            display: none; /* Inicialmente escondido */
-            padding: 40px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 100%;
-            text-align: center;
-        }
-        #fotosDSS {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-            justify-items: center;
-        }
-        .foto-dss {
-            width: 100%;
-            max-width: 200px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        #form-dialogos-foto {
-            margin-top: 20px;
-            padding: 20px;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-        #form-dialogos-foto label, #form-dialogos-foto input {
-            display: block;
-            margin-bottom: 10px;
-        }
+/* --- NOVO CSS para a lista de Colaboradores (Cards) --- */
+#colaboradores-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 800px; /* Ajustado para ser centralizado dentro da main */
+    margin: auto; /* Centraliza */
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    display: none; /* Inicia escondido, controlado pelo JS */
+    min-height: 400px;
+    position: relative;
+}
+.filtro-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+    justify-content: center; /* Centraliza os filtros */
+}
+.filtro-container label {
+    margin-bottom: 0; /* Remove margem inferior padrão */
+    align-self: center; /* Alinha verticalmente o label com o input/select */
+}
+.filtro-container input, .filtro-container select {
+    flex: 1; /* Permite que cresçam para preencher o espaço */
+    min-width: 180px; /* Largura mínima para os campos de filtro */
+    margin-bottom: 0; /* Remove margem inferior padrão */
+}
 
-        /* Indicadores */
-        #indicadores-content {
-            display: none; /* Inicialmente escondido */
-            padding: 40px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 100%;
-        }
-        #graficoIndicadores {
-            max-width: 100%;
-            height: 400px; /* Altura fixa para o gráfico */
-            margin-top: 20px;
-        }
+#listaColaboradores { /* ID do container onde os cards serão injetados */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Espaço entre os cards */
+    justify-content: center; /* Centraliza os cards */
+    margin-top: 20px;
+}
+.colaborador-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+    width: 200px; /* Largura fixa para os cards */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-align: center;
+    background-color: #ffffff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.colaborador-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
 
-        /* --- NOVO CSS PARA O BOTÃO FLUTUANTE --- */
-        .fab-button {
-            position: fixed; /* Fixa na tela */
-            bottom: 30px;    /* 30px do fundo */
-            right: 30px;     /* 30px da direita */
-            background-color: #007bff; /* Cor azul do seu tema */
-            color: white;
-            border: none;
-            border-radius: 50%; /* Faz o botão ser redondo */
-            width: 60px;     /* Largura */
-            height: 60px;    /* Altura */
-            font-size: 30px; /* Tamanho do '+' */
-            display: flex; /* Para centralizar o '+' */
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25); /* Sombra para destacá-lo */
-            z-index: 1000;   /* Garante que fique acima de outros elementos */
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
+.colaborador-card img {
+    width: 100px; /* Tamanho da foto */
+    height: 100px;
+    border-radius: 50%; /* Para fotos circulares */
+    object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
+    margin-bottom: 10px;
+    border: 3px solid #007bff; /* Borda ao redor da foto */
+}
 
-        .fab-button:hover {
-            background-color: #0056b3; /* Cor mais escura ao passar o mouse */
-            transform: translateY(-3px); /* Efeito de "subir" um pouco */
-        }
+.colaborador-card h3 {
+    margin: 0 0 5px 0;
+    color: #333;
+    font-size: 1.2em;
+}
 
-        /* Esconder o botão "Adicionar Colaborador" original se ele ainda existir */
-        #colaboradores-content #btn-add-colaborador {
-            display: none;
-        }
-        /* --- FIM DO NOVO CSS --- */
+.colaborador-card p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9em;
+}
+/* --- FIM DO NOVO CSS para a lista de Colaboradores (Cards) --- */
 
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .topo {
-                flex-direction: column;
-                padding: 15px 20px;
-            }
-            .tabs {
-                flex-wrap: wrap; /* Pode voltar a quebrar se a tela for muito pequena */
-                justify-content: center;
-                margin-top: 15px;
-            }
-            .tab {
-                flex: none; /* Não cresce, mantém o tamanho do conteúdo */
-                width: auto;
-                padding: 10px 15px;
-                min-width: unset; /* Remove min-width em telas pequenas para quebrar melhor */
-            }
-            main {
-                margin: 30px auto;
-                padding: 0; /* Padding será nos conteúdos das abas */
-            }
-            .tab-content {
-                padding: 20px;
-            }
-            .form-grid {
-                flex-direction: column;
-                gap: 20px;
-            }
-            .coluna-esquerda, .coluna-direita {
-                min-width: 100%;
-            }
-            .colaboradores-card {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .colaboradores-foto {
-                margin-bottom: 10px;
-            }
-        }
+
+/* Modal (geral para overlays) */
+.modal-overlay {
+    display: none; /* Todos os overlays de modal começam escondidos */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    flex-direction: column;
+}
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+.modal-content button {
+    margin-top: 20px;
+}
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #004085;
+    font-size: 24px;
+    text-align: center;
+}
+.modal-message {
+    color: red;
+    margin-top: 10px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* DDS - Diálogos de Segurança */
+#dialogos-seguranca-content {
+    display: none; /* Inicialmente escondido */
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 100%;
+    text-align: center;
+}
+#fotosDSS {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    justify-items: center;
+}
+.foto-dss {
+    width: 100%;
+    max-width: 200px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+#form-dialogos-foto {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+#form-dialogos-foto label, #form-dialogos-foto input {
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Indicadores */
+#indicadores-content {
+    display: none; /* Inicialmente escondido */
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 100%;
+}
+#graficoIndicadores {
+    max-width: 100%;
+    height: 400px; /* Altura fixa para o gráfico */
+    margin-top: 20px;
+}
+
+/* --- NOVO CSS PARA O BOTÃO FLUTUANTE --- */
+.fab-button {
+    position: fixed; /* Fixa na tela */
+    bottom: 30px;    /* 30px do fundo */
+    right: 30px;     /* 30px da direita */
+    background-color: #007bff; /* Cor azul do seu tema */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Faz o botão ser redondo */
+    width: 60px;     /* Largura */
+    height: 60px;    /* Altura */
+    font-size: 30px; /* Tamanho do '+' */
+    display: flex; /* Para centralizar o '+' */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25); /* Sombra para destacá-lo */
+    z-index: 1000;   /* Garante que fique acima de outros elementos */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.fab-button:hover {
+    background-color: #0056b3; /* Cor mais escura ao passar o mouse */
+    transform: translateY(-3px); /* Efeito de "subir" um pouco */
+}
+
+/* Esconder o botão "Adicionar Colaborador" original se ele ainda existir */
+#colaboradores-content #btn-add-colaborador {
+    display: none;
+}
+/* --- FIM DO NOVO CSS --- */
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .topo {
+        flex-direction: column;
+        padding: 15px 20px;
+    }
+    .tabs {
+        flex-wrap: wrap; /* Pode voltar a quebrar se a tela for muito pequena */
+        justify-content: center;
+        margin-top: 15px;
+    }
+    .tab {
+        flex: none; /* Não cresce, mantém o tamanho do conteúdo */
+        width: auto;
+        padding: 10px 15px;
+        min-width: unset; /* Remove min-width em telas pequenas para quebrar melhor */
+    }
+    main {
+        margin: 30px auto;
+        padding: 0; /* Padding será nos conteúdos das abas */
+    }
+    .tab-content {
+        padding: 20px;
+    }
+    .form-grid {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .coluna-esquerda, .coluna-direita {
+        min-width: 100%;
+    }
+    /* Ajustes para cards de colaborador em telas menores */
+    #listaColaboradores {
+        justify-content: center;
+        gap: 15px;
+    }
+    .colaborador-card {
+        width: 160px; /* Adapta a largura do card */
+        padding: 10px;
+    }
+    .colaborador-card img {
+        width: 80px; /* Adapta o tamanho da foto */
+        height: 80px;
+    }
+    .colaborador-card h3 {
+        font-size: 1.1em;
+    }
+    .colaborador-card p {
+        font-size: 0.8em;
+    }
+    .filtro-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filtro-container input, .filtro-container select {
+        width: 100%;
+        min-width: unset;
+    }
+}
     </style>
 </head>
 <body>
@@ -462,8 +515,19 @@
 
         <div id="colaboradores-content" class="tab-content">
             <h2>COLABORADORES</h2>
-            <div id="colaboradores-lista"></div>
+            <div style="margin-bottom: 20px;">
+                <label for="filtroTurno">Filtrar por Turno:</label>
+                <select id="filtroTurno">
+                    <option value="">Todos</option>
+                    <option value="1º Turno">1º Turno</option>
+                    <option value="2º Turno">2º Turno</option>
+                    <option value="3º Turno">3º Turno</option>
+                    </select>
             </div>
+            <div id="listaColaboradores">
+                <p>Carregando colaboradores...</p>
+            </div>
+        </div>
 
         <div id="dialogos-seguranca-content" class="tab-content">
             <h2>DIÁLOGOS DE SEGURANÇA</h2>
@@ -522,6 +586,24 @@
             <button type="submit" style="background: #28a745; color: white;">Salvar</button>
             <button type="button" id="btn-cancelar-add-colaborador" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
         </form>
+        <div id="colaboradores-content" class="tab-content">
+            <h2>COLABORADORES</h2>
+            <div class="filtro-container">
+                <label for="pesquisaNome">Pesquisar por Nome:</label>
+                <input type="text" id="pesquisaNome" placeholder="Digite o nome..." />
+
+                <label for="filtroTurno">Filtrar por Turno:</label>
+                <select id="filtroTurno">
+                    <option value="">Todos</option>
+                    <option value="1º Turno">1º Turno</option>
+                    <option value="2º Turno">2º Turno</option>
+                    <option value="3º Turno">3º Turno</option>
+                </select>
+            </div>
+            <div id="listaColaboradores">
+                <p>Carregando colaboradores...</p>
+            </div>
+        </div>
     </div>
 
     <div id="senhaColaboradorModal" class="modal-overlay">
@@ -546,9 +628,9 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzqIZhmRvaVowC-aVuaXqWIgXSa3ooWBoLL3EQLjYWMeDPmsgryG0i-6sjBdGRpCltXvA/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzV1BSTExT6TmPkCs-uHuWWyk9rbmhutjEp__D75zf9OBUCwfdW3Cw2tHwSdkMFRqds3Q/exec';
         const SENHA_COLABORADORES = "davidmend123";
         const SENHA_DDS = "davidmend123"; // Assumindo a mesma senha para DDS
 
@@ -585,6 +667,13 @@
         const btnVerificarSenhaDDS = document.getElementById('btn-verificar-senha-dds');
         const btnCancelarSenhaDDS = document.getElementById('btn-cancelar-senha-dds');
         const mensagemSenhaDDS = document.getElementById('mensagem-senha-dds');
+
+        // Elementos da aba de colaboradores
+        // ADICIONADO: Seleção do input de pesquisa por nome
+        const pesquisaNomeInput = document.getElementById('pesquisaNome');
+        const filtroTurnoSelect = document.getElementById('filtroTurno');
+        const listaColaboradoresDiv = document.getElementById('listaColaboradores');
+        let todosColaboradoresCarregados = []; // Variável para armazenar todos os colaboradores
 
         // --- Funções Auxiliares ---
 
@@ -623,7 +712,7 @@
 
             // Chamadas específicas para carregar dados/inicializar
             if (tabName === 'colaboradores') {
-                carregarColaboradores();
+                carregarColaboradores(); // Carrega os dados dos colaboradores
             } else if (tabName === 'indicadores') {
                 carregarIndicadores();
             } else if (tabName === 'dialogos') {
@@ -632,45 +721,98 @@
             }
         }
 
+        // Função auxiliar para exibir os colaboradores (com ou sem filtro)
+        function exibirColaboradores(colaboradoresParaExibir) {
+            listaColaboradoresDiv.innerHTML = ''; // Limpa o conteúdo atual
+
+            if (colaboradoresParaExibir.length === 0) {
+                listaColaboradoresDiv.innerHTML = '<p>Nenhum colaborador encontrado com o filtro aplicado.</p>';
+                return;
+            }
+
+            colaboradoresParaExibir.forEach(colaborador => {
+                const card = document.createElement('div');
+                card.className = 'colaborador-card'; // Aplica a classe CSS
+
+                // As chaves do objeto colaborador devem corresponder aos nomes normalizados do seu Apps Script
+                // (ex: 'fotourl', 'nome', 'turno')
+                const fotoUrl = colaborador.fotourl || 'https://via.placeholder.com/100/CCCCCC/FFFFFF?text=Sem+Foto'; // Placeholder se não houver foto
+                const nome = colaborador.nome || 'Nome Não Informado';
+                const turno = colaborador.turno || 'Turno Não Informado';
+                const cargo = colaborador.cargo || 'Cargo Não Informado'; // Adicionando cargo
+
+                card.innerHTML = `
+                    <img src="${fotoUrl}" alt="Foto de ${nome}">
+                    <h3>${nome}</h3>
+                    <p>${cargo}</p>
+                    <p>Turno: ${turno}</p>
+                `;
+                listaColaboradoresDiv.appendChild(card);
+            });
+        }
+
+        // FUNÇÃO ALTERADA (ALTERAÇÃO 7): Agora filtra por nome E por turno
+        function filtrarColaboradores() {
+            const termoPesquisa = pesquisaNomeInput.value.toLowerCase().trim(); // Pega o termo de pesquisa do nome
+            const filtroTurno = filtroTurnoSelect.value; // Pega o turno selecionado
+
+            let colaboradoresFiltrados = todosColaboradoresCarregados.filter(colaborador => {
+                const nomeCorresponde = !termoPesquisa || // Se o termo de pesquisa estiver vazio, considera true
+                                        (colaborador.nome && colaborador.nome.toLowerCase().includes(termoPesquisa));
+
+                const turnoCorresponde = !filtroTurno || filtroTurno === "" || // Se "Todos" ou vazio, considera true
+                                         (colaborador.turno && colaborador.turno.toLowerCase() === filtroTurno.toLowerCase());
+
+                return nomeCorresponde && turnoCorresponde; // Retorna true se ambos os critérios corresponderem
+            });
+
+            exibirColaboradores(colaboradoresFiltrados); // Exibe apenas os filtrados
+        }
+
+
         // --- Funções de Carregamento de Dados ---
 
         async function carregarColaboradores() {
             try {
+                listaColaboradoresDiv.innerHTML = '<p>Carregando colaboradores...</p>'; // Mensagem de carregamento
                 const res = await fetch(`${API_URL}?action=getColaboradores`);
                 const dados = await res.json();
-                const lista = document.getElementById('colaboradores-lista');
-                if (!dados || dados.length === 0) {
-                    lista.innerHTML = '<p>Nenhum colaborador cadastrado.</p>';
-                    return;
+
+                if (dados.status === 'success' && dados.data && dados.data.length > 0) {
+                    todosColaboradoresCarregados = dados.data; // Armazena todos os colaboradores
+                    filtrarColaboradores(); // Chama a função de filtro para exibir inicialmente (ou com o filtro padrão)
+                } else {
+                    listaColaboradoresDiv.innerHTML = '<p>Nenhum colaborador cadastrado ou erro ao carregar dados.</p>';
+                    todosColaboradoresCarregados = []; // Garante que a lista esteja vazia
                 }
-                lista.innerHTML = dados.map(p => `
-                    <div class="colaboradores-card">
-                        <img src="${p.foto}" class="colaboradores-foto" alt="${p.nome}" />
-                        <div class="colaboradores-info">
-                            <div class="colaboradores-nome"><strong>${p.nome}</strong></div>
-                            <div class="colaboradores-cargo">${p.cargo}</div>
-                            <div class="colaboradores-turno">${p.turno}</div>
-                        </div>
-                    </div>
-                `).join('');
             } catch (error) {
                 console.error('Erro ao carregar colaboradores:', error);
-                document.getElementById('colaboradores-lista').innerHTML = '<p>Erro ao carregar colaboradores.</p>';
+                listaColaboradoresDiv.innerHTML = '<p style="color: red;">Erro ao carregar colaboradores.</p>';
+                todosColaboradoresCarregados = [];
             }
         }
+
 
         async function carregarFotosDDS() {
             try {
                 const res = await fetch(`${API_URL}?action=getDialogos`);
                 const dados = await res.json();
                 const fotosContainer = document.getElementById('fotosDSS');
-                if (!dados || dados.length === 0) {
+                fotosContainer.innerHTML = ''; // Limpa antes de adicionar
+
+                if (dados.status === 'success' && dados.data && dados.data.length > 0) {
+                    // Inverte a ordem das fotos para mostrar as mais recentes primeiro
+                    const fotosOrdenadas = dados.data.slice().reverse(); 
+                    fotosOrdenadas.forEach(fotoUrl => {
+                        const img = document.createElement('img');
+                        img.src = fotoUrl;
+                        img.className = 'foto-dss';
+                        img.alt = "Diálogo de Segurança";
+                        fotosContainer.appendChild(img);
+                    });
+                } else {
                     fotosContainer.innerHTML = '<p>Nenhuma foto de DDS disponível.</p>';
-                    return;
                 }
-                fotosContainer.innerHTML = dados.map(fotoUrl => `
-                    <img src="${fotoUrl}" class="foto-dss" alt="Diálogo de Segurança" />
-                `).join('');
             } catch (error) {
                 console.error('Erro ao carregar fotos DDS:', error);
                 document.getElementById('fotosDSS').innerHTML = '<p>Erro ao carregar fotos DDS.</p>';
@@ -680,7 +822,7 @@
         async function carregarIndicadores() {
             try {
                 const res = await fetch(`${API_URL}?action=getIndicadores`);
-                const dados = await res.json();
+                const dados = await res.json(); // Certifique-se que o JSON está sendo parseado corretamente
                 const ctx = document.getElementById('graficoIndicadores').getContext('2d');
 
                 // Destrói o gráfico existente antes de criar um novo, se houver
@@ -688,44 +830,50 @@
                     window.myChart.destroy();
                 }
 
-                window.myChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: dados.labels,
-                        datasets: [{
-                            label: 'Qtd de Operações',
-                            data: dados.valores,
-                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
+                if (dados.status === 'success' && dados.data && dados.data.labels && dados.data.valores) {
+                    window.myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: dados.data.labels, // Acessa corretamente os labels dentro de 'data'
+                            datasets: [{
+                                label: 'Qtd de Operações',
+                                data: dados.data.valores, // Acessa corretamente os valores dentro de 'data'
+                                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
                         },
-                        plugins: {
-                            legend: {
-                                display: true,
-                                position: 'top',
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
                             },
-                            title: {
-                                display: true,
-                                text: 'Registro de Operações por Transportadora/Mês'
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Registro de Operações por Transportadora/Mês'
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                } else {
+                    const indicadoresDiv = document.getElementById('indicadores-content');
+                    indicadoresDiv.innerHTML = '<h2>INDICADORES DE REGISTRO</h2><p>Nenhum dado de indicador disponível ou erro no formato.</p>';
+                }
             } catch (error) {
                 console.error('Erro ao carregar indicadores:', error);
                 const indicadoresDiv = document.getElementById('indicadores-content');
                 indicadoresDiv.innerHTML = '<h2>INDICADORES DE REGISTRO</h2><p>Erro ao carregar dados do gráfico.</p>';
             }
         }
+
 
         // --- Event Listeners ---
 
@@ -741,6 +889,11 @@
             });
         });
 
+        // Eventos de mudança no filtro de turno E na pesquisa por nome
+        pesquisaNomeInput.addEventListener('input', filtrarColaboradores); // Adicionado para pesquisa por nome
+        filtroTurnoSelect.addEventListener('change', filtrarColaboradores);
+
+
         // Formulário de Operações
         document.getElementById('formulario-operacoes').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -751,196 +904,189 @@
             if (dados.transportadora === 'outro') {
                 const outraTransportadora = document.getElementById('outraTransportadora').value;
                 if (!outraTransportadora.trim()) {
-                    alert('Por favor, digite o nome da outra transportadora.');
+                    alert('Por favor, digite o nome da transportadora.');
                     return;
                 }
                 dados.transportadora = outraTransportadora;
             }
-            delete dados.outraTransportadora; // Remove o campo extra, se existir
 
-            dados.action = 'addformulario';
+            // Remove o campo 'outraTransportadora' se não for necessário antes de enviar
+            delete dados.outraTransportadora;
+
+            const payload = { action: 'addFormularioData', data: dados }; // Ação atualizada para 'addFormularioData'
+
             try {
                 const res = await fetch(API_URL, {
                     method: 'POST',
-                    body: JSON.stringify(dados),
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
                 });
                 const result = await res.json();
-                if (result.success) {
-                    alert('Formulário enviado com sucesso!');
-                    e.target.reset();
-                    mostrarOutroCampo(document.getElementById('transportadora')); // Esconde campo "Outro"
-                    // Não recarregue indicadores aqui se não estiver na aba de indicadores
+
+                if (result.status === 'success') {
+                    alert('Dados salvos com sucesso!');
+                    e.target.reset(); // Limpa o formulário
+                    document.getElementById('campoOutro').style.display = 'none'; // Esconde campo "Outro"
                 } else {
-                    alert('Erro ao enviar formulário: ' + (result.message || 'Erro desconhecido.'));
+                    alert('Erro ao salvar dados: ' + result.message);
                 }
             } catch (error) {
                 console.error('Erro de rede ou API:', error);
-                alert('Ocorreu um erro ao conectar com o servidor.');
+                alert('Erro de rede ou API: ' + error.message);
             }
         });
 
-        // --- Lógica do Modal Colaboradores ---
-        fabAddColaborador.addEventListener('click', () => { // Usando o novo botão flutuante
+        // Eventos do Modal de Adicionar Colaborador (Botão FAB)
+        fabAddColaborador.addEventListener('click', () => {
             senhaColaboradorModal.style.display = 'flex';
-            senhaAddColaboradorInput.value = '';
-            mensagemSenhaColaborador.textContent = '';
-            senhaAddColaboradorInput.focus();
+            senhaAddColaboradorInput.value = ''; // Limpa o campo de senha
+            mensagemSenhaColaborador.textContent = ''; // Limpa mensagem de erro
         });
 
         btnVerificarSenhaColaborador.addEventListener('click', () => {
-            const senhaDigitada = senhaAddColaboradorInput.value;
-            if (senhaDigitada === SENHA_COLABORADORES) {
-                mensagemSenhaColaborador.textContent = '';
+            if (senhaAddColaboradorInput.value === SENHA_COLABORADORES) {
                 senhaColaboradorModal.style.display = 'none';
                 formColaboradorModal.style.display = 'flex';
-                document.getElementById('formAdicionarColaborador').reset();
-                document.getElementById('fotoColaborador').value = ''; // Limpa o campo de arquivo
+                document.getElementById('formAdicionarColaborador').reset(); // Limpa o formulário
             } else {
-                mensagemSenhaColaborador.textContent = 'Senha incorreta.';
-                senhaAddColaboradorInput.value = '';
+                mensagemSenhaColaborador.textContent = 'Senha incorreta!';
             }
         });
 
         btnCancelarSenhaColaborador.addEventListener('click', () => {
             senhaColaboradorModal.style.display = 'none';
-            senhaAddColaboradorInput.value = '';
-            mensagemSenhaColaborador.textContent = '';
         });
 
         btnCancelarAddColaborador.addEventListener('click', () => {
             formColaboradorModal.style.display = 'none';
-            document.getElementById('formAdicionarColaborador').reset();
-            document.getElementById('fotoColaborador').value = ''; // Limpa o campo de arquivo
         });
 
-        // --- Lógica de Envio do Formulário de Adicionar Colaborador ---
+        // Formulário de Adicionar Colaborador
         document.getElementById('formAdicionarColaborador').addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const nome = document.getElementById('nomeColaborador').value;
             const cargo = document.getElementById('cargoColaborador').value;
             const turno = document.getElementById('turnoColaborador').value;
-            const fotoInput = document.getElementById('fotoColaborador');
-            const fotoFile = fotoInput.files[0];
+            const fotoFile = document.getElementById('fotoColaborador').files[0];
 
-            if (!nome || !cargo || !turno || !fotoFile) {
-                alert('Por favor, preencha todos os campos e selecione uma foto.');
+            if (!fotoFile) {
+                alert('Por favor, selecione uma foto.');
                 return;
             }
 
-            // Leitura da foto como Base64
+            // Converter imagem para Base64
             const reader = new FileReader();
             reader.readAsDataURL(fotoFile);
+            reader.onloadend = async function() {
+                const base64Data = reader.result; // Contém 'data:image/png;base64,...'
+                const mimeType = fotoFile.type;
+                const fileName = fotoFile.name;
 
-            reader.onload = async () => {
-                const fotoBase64 = reader.result; // String Base64 da imagem
-
-                const dados = {
+                const payload = {
                     action: 'addColaborador',
-                    nome: nome,
-                    cargo: cargo,
-                    turno: turno,
-                    foto: fotoBase64
+                    data: {
+                        nome: nome,
+                        cargo: cargo,
+                        turno: turno,
+                        fileName: fileName,
+                        mimeType: mimeType,
+                        fotoBase64: base64Data
+                    }
                 };
 
                 try {
                     const res = await fetch(API_URL, {
                         method: 'POST',
-                        body: JSON.stringify(dados),
-                        headers: { 'Content-Type': 'application/json' }
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload)
                     });
                     const result = await res.json();
-                    if (result.success) {
+
+                    if (result.status === 'success') {
                         alert('Colaborador adicionado com sucesso!');
-                        formColaboradorModal.style.display = 'none'; // Esconde o modal
-                        document.getElementById('formAdicionarColaborador').reset(); // Limpa o formulário
-                        fotoInput.value = ''; // Limpa o input de arquivo
+                        formColaboradorModal.style.display = 'none';
                         carregarColaboradores(); // Recarrega a lista de colaboradores
                     } else {
-                        alert('Erro ao adicionar colaborador: ' + (result.message || 'Erro desconhecido.'));
+                        alert('Erro ao adicionar colaborador: ' + result.message);
                     }
                 } catch (error) {
-                    console.error('Erro de rede ou API ao adicionar colaborador:', error);
-                    alert('Ocorreu um erro ao conectar com o servidor para adicionar o colaborador.');
+                    console.error('Erro de rede ou API:', error);
+                    alert('Erro de rede ou API: ' + error.message);
                 }
-            };
-
-            reader.onerror = (error) => {
-                console.error('Erro ao ler o arquivo de imagem:', error);
-                alert('Erro ao carregar a foto.');
             };
         });
 
-        // --- Lógica do Modal DDS (já existente, apenas para referência) ---
+        // Eventos do Modal de Upload de Foto DDS
         btnAbrirUploadDDS.addEventListener('click', () => {
             senhaDDSModal.style.display = 'flex';
-            senhaDDSInput.value = '';
-            mensagemSenhaDDS.textContent = '';
-            senhaDDSInput.focus();
+            senhaDDSInput.value = ''; // Limpa o campo de senha
+            mensagemSenhaDDS.textContent = ''; // Limpa mensagem de erro
         });
 
         btnVerificarSenhaDDS.addEventListener('click', () => {
-            const senhaDigitada = senhaDDSInput.value;
-            if (senhaDigitada === SENHA_DDS) {
-                mensagemSenhaDDS.textContent = '';
+            if (senhaDDSInput.value === SENHA_DDS) {
                 senhaDDSModal.style.display = 'none';
-                formDialogosFoto.style.display = 'block';
-                fotoDDSInput.value = ''; // Limpa o campo de arquivo
+                formDialogosFoto.style.display = 'block'; // Mostra o formulário de upload
             } else {
-                mensagemSenhaDDS.textContent = 'Senha incorreta.';
-                senhaDDSInput.value = '';
+                mensagemSenhaDDS.textContent = 'Senha incorreta!';
             }
         });
 
         btnCancelarSenhaDDS.addEventListener('click', () => {
             senhaDDSModal.style.display = 'none';
-            senhaDDSInput.value = '';
-            mensagemSenhaDDS.textContent = '';
         });
 
         btnEnviarFotoDDS.addEventListener('click', async () => {
-            const fotoDDSFile = document.getElementById('fotoDDS').files[0];
-            if (!fotoDDSFile) {
-                alert('Por favor, selecione uma foto PNG para enviar.');
+            const fotoFile = fotoDDSInput.files[0];
+
+            if (!fotoFile) {
+                alert('Por favor, selecione uma foto para upload.');
                 return;
             }
 
+            // Converter imagem para Base64
             const reader = new FileReader();
-            reader.readAsDataURL(fotoDDSFile);
+            reader.readAsDataURL(fotoFile);
+            reader.onloadend = async function() {
+                const base64Data = reader.result.split(',')[1]; // Remove 'data:image/png;base64,'
+                const mimeType = fotoFile.type;
+                const fileName = fotoFile.name;
 
-            reader.onload = async () => {
-                const fotoBase64 = reader.result;
-
-                const dados = {
-                    action: 'addDialogo',
-                    foto: fotoBase64
+                const payload = {
+                    action: 'uploadFotoDDS',
+                    data: {
+                        fileName: fileName,
+                        mimeType: mimeType,
+                        base64Data: base64Data
+                    }
                 };
 
                 try {
                     const res = await fetch(API_URL, {
                         method: 'POST',
-                        body: JSON.stringify(dados),
-                        headers: { 'Content-Type': 'application/json' }
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload)
                     });
                     const result = await res.json();
-                    if (result.success) {
+
+                    if (result.status === 'success') {
                         alert('Foto DDS enviada com sucesso!');
                         formDialogosFoto.style.display = 'none';
-                        fotoDDSInput.value = '';
-                        carregarFotosDDS(); // Recarrega as fotos de DDS
+                        fotoDDSInput.value = ''; // Limpa o input file
+                        carregarFotosDDS(); // Recarrega a galeria de fotos DDS
                     } else {
-                        alert('Erro ao enviar foto DDS: ' + (result.message || 'Erro desconhecido.'));
+                        alert('Erro ao enviar foto DDS: ' + result.message);
                     }
                 } catch (error) {
-                    console.error('Erro de rede ou API ao enviar foto DDS:', error);
-                    alert('Ocorreu um erro ao conectar com o servidor para enviar a foto DDS.');
+                    console.error('Erro de rede ou API:', error);
+                    alert('Erro de rede ou API: ' + error.message);
                 }
-            };
-
-            reader.onerror = (error) => {
-                console.error('Erro ao ler o arquivo de imagem DDS:', error);
-                alert('Erro ao carregar a foto DDS.');
             };
         });
 

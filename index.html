@@ -222,15 +222,15 @@
 
     <header class="topo">
         <img src="https://i.postimg.cc/15wPGs3w/logo-pizzattolog-removebg-preview.png" alt="Logo PIZZATTOLOG" class="logo" />
-        <div class="tabs">
-            <div class="tab active" data-tab="formulario">Formulário</div>
-            <div class="tab" data-tab="colaboradores">Colaboradores</div>
-            <div class="tab" data-tab="dialogos">Diálogos de Segurança</div>
-            <div class="tab" data-tab="checklist">Check List</div>
-            <div class="tab" data-tab="indicadores">Indicadores</div>
-            <div class="tab" data-tab="descricao">Descrição Operacional</div>
-        </div>
-    </header>
+         <div class="tabs">
+      <div class="tab active" data-tab="colaboradores">Colaboradores</div>
+      <div class="tab" data-tab="operacoes">Operações</div>
+      <div class="tab" data-tab="seguranca">Diálogos de Segurança</div>
+      <div class="tab" data-tab="descricao">Descrição Operacional</div>
+      <div class="tab" data-tab="checklist">Check List 5S</div>
+      <div class="tab" data-tab="indicadores">Indicadores Registro</div>
+    </div>
+  </header>
 
     <main id="main-content">
         <div id="formulario-content" class="tab-content active">
@@ -351,14 +351,16 @@
             <canvas id="graficoIndicadores"></canvas>
         </div>
 
-        <div id="descricao-content" class="tab-content">
-            <h2>DESCRIÇÃO OPERACIONAL</h2>
-            <p>Conteúdo da aba "Descrição Operacional" em construção...</p>
-        </div>
+       <div id="descricao" class="tab-content">
+      <h2>Descrição Operacional</h2>
+      <p>Conteúdo de descrição operacional.</p>
+    </div>
+  </div>
 
     </main>
 
     <button id="fab-add-colaborador" class="fab-button" title="Adicionar Novo Colaborador">
+
         +
     </button>
 
@@ -970,16 +972,45 @@
 
         // --- Inicialização ao carregar a página ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Mostra a primeira aba por padrão ao carregar a página
-            const firstTab = document.querySelector('.tab');
-            if (firstTab) {
-                const firstTabName = firstTab.dataset.tab; // Pega o valor de data-tab="formulario"
-                showTabContent(firstTabName); // Chama a função para ativar a primeira aba
-            } else {
-                console.warn("Nenhuma aba encontrada. Verifique os elementos com a classe 'tab'.");
-            }
-        });
+            // Troca de abas
+    const tabs = document.querySelectorAll(".tab");
+    const tabContents = document.querySelectorAll(".tab-content");
 
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        const target = tab.getAttribute("data-tab");
+
+        tabs.forEach(t => t.classList.remove("active"));
+        tabContents.forEach(content => content.classList.remove("active"));
+
+        tab.classList.add("active");
+        document.getElementById(target).classList.add("active");
+
+        // Esconder campos ao trocar de aba
+        document.getElementById("senha-container").style.display = "none";
+        document.getElementById("formulario-container").style.display = "none";
+      });
+    });
+
+    function mostrarSenha() {
+      // Só mostra senha se estiver na aba "Colaboradores"
+      const colaboradoresAtivo = document.getElementById("colaboradores").classList.contains("active");
+      if (colaboradoresAtivo) {
+        document.getElementById("senha-container").style.display = "block";
+        document.getElementById("formulario-container").style.display = "none";
+      }
+    }
+
+    function verificarSenha() {
+      const senha = document.getElementById("senha").value;
+      if (senha === "pizzatto123") {
+        document.getElementById("senha-container").style.display = "none";
+        document.getElementById("formulario-container").style.display = "block";
+      } else {
+        alert("Senha incorreta!");
+      }
+    }
+  </script>
     </script>
 </body>
 </html>

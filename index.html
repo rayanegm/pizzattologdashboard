@@ -231,12 +231,11 @@
     </div>
   </header>
 
-  <main class="main-content" id="main-content">
-    <div id="operacoes-content" class="tab-content active"> 
-      <h2>FORMULÁRIO</h2
-      <main id="main-content">
-        <div id="operacoes-content" class="tab-content active"> <h2>FORMULÁRIO</h2>
-            <form id="formulario-operacoes" name="formulario-operacoes">
+ <main class="main-content" id="main-content">
+  <div id="operacoes-content" class="tab-content active"> 
+    <h2>FORMULÁRIO</h2>
+    <form id="formulario-operacoes" name="formulario-operacoes">
+           
                 <div class="form-grid">
                     <div class="coluna-esquerda">
                         <label for="cte">CTE</label> <input type="text" id="cte" name="cte" required="">
@@ -340,6 +339,13 @@
         document.getElementById(`${tabName}-content`).classList.add('active');
       });
     });
+    .tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
   </script>
 </body>
 </html>

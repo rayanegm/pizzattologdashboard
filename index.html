@@ -35,19 +35,21 @@
             top: 0; left: 0; right: 0;
             z-index: 1100;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          
         }
 }
         .logo {
             max-width: 120px;
-            height: auto;
+            height: 40px;
             cursor: pointer;
+            margin-right: 10px
         }
 
          /* --- Alterações aqui para as abas uma ao lado da outra --- */
         .tabs {
             display: flex; /* Adicionado: Ativa o Flexbox para alinhar horizontalmente */
             flex-wrap: nowrap; /* Impede que as abas quebrem para a próxima linha */
-            gap: 10px; /* Aumentado um pouco o espaçamento entre as abas */
+            gap: 8px; /* Aumentado um pouco o espaçamento entre as abas */
             overflow-x: auto; /* Adicionado: Habilita scroll horizontal se as abas excederem a largura */
             -webkit-overflow-scrolling: touch; /* Melhora o scroll em dispositivos iOS */
             padding-bottom: 5px; /* Adicionado: Para dar espaço para a barra de rolagem se aparecer */
@@ -56,7 +58,7 @@
             flex-shrink: 0; /* Impede que as abas encolham */
             background: rgba(0,123,255,0.15);
             color: #004085;
-            padding: 8px 15px; /* Ajustado um pouco o padding para melhor visualização */
+            padding: 6px 12px; /* Ajustado um pouco o padding para melhor visualização */
             text-align: center;
             border-radius: 8px; /* Borda um pouco mais arredondada */
             cursor: pointer;
@@ -64,16 +66,17 @@
             transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
             user-select: none;
             position: relative;        
-            font-size: 14px; /* Texto um pouco maior para melhor leitura */
+            font-size: 13px; /* Texto um pouco maior para melhor leitura */
             min-width: 120px; /* Largura mínima para cada aba */
             white-space: nowrap; /* Impede que o texto da aba quebre */
+            margin-bottom: 2px
         }
         /* --- Fim das alterações para abas --- */
 
         .tab:hover {
             background-color: rgba(0,123,255,0.35);
             color: #002752;
-            box-shadow: 0 4px 10px rgba(0,123,255,0.4);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
         }
         .tab.active {
             background-color: #66b2ff;

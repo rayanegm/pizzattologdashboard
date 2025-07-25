@@ -39,22 +39,24 @@
             height: auto;
             cursor: pointer;
         }
-        .tabs {
-            display: flex;
-            gap: 10px;
-        }
+      .tabs {
+  gap: 6px; /* menos espaço entre abas */
+}
         .tab {
             flex: 1;
             background: rgba(0,123,255,0.15);
             color: #004085;
-            padding: 12px 20px;
+            padding: 6px 12px;  /* menor padding */
             text-align: center;
             border-radius: 10px;
             cursor: pointer;
             font-weight: 600;
             transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
             user-select: none;
-            position: relative;
+            position: relative;     
+            font-size: 13px;    /* texto um pouco menor */
+             min-width: 80px;    /* largura mínima menor */
+           border-radius: 6px; /* borda um pouco mais arredondada */
         }
         .tab:hover {
             background-color: rgba(0,123,255,0.35);
@@ -91,14 +93,14 @@
             align-items: center; /* Centraliza o conteúdo das abas */
             justify-content: flex-start; /* Alinha o conteúdo das abas no topo */
         }
-        .tab-content {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 100%;
-            display: none; /* Escondido por padrão */
-        }
+   .tab-content {
+    background: transparent; /* Fundo transparente */
+    padding: 40px;           /* Mantém o espaçamento interno */
+    border-radius: 12px;     /* Pode manter para cantos arredondados */
+    box-shadow: none;        /* Remove sombra para não interferir */
+    width: 100%;
+    display: none;           /* continua escondido por padrão */
+}
         .tab-content.active {
             display: block; /* Mostra o conteúdo ativo */
         }

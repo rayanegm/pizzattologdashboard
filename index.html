@@ -215,6 +215,12 @@
         margin-bottom: 10px;
       }
     }
+        .tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
 
   </style>
 </head>
@@ -286,10 +292,8 @@
                     </div>
                 </div>
                 <button type="submit" id="btnEnviar">ENVIAR</button>
-            </form>
-        </div>
-
-      </form>
+      
+       </form>
     </div>
     <div id="colaboradores-content" class="tab-content">
       <h2>COLABORADORES</h2>
@@ -339,12 +343,7 @@
         document.getElementById(`${tabName}-content`).classList.add('active');
       });
     });
-    .tab-content {
-  display: none;
-}
-.tab-content.active {
-  display: block;
-}
+
 
   </script>
 </body>

@@ -219,196 +219,163 @@
   </style>
 </head>
 <body>
-  <header class="topo">
-    <img src="https://i.postimg.cc/15wPGs3w/logo-pizzattolog-removebg-preview.png" alt="Logo PIZZATTOLOG" class="logo">
-    <div class="tabs">
-      <div class="tab active" data-tab="colaboradores">
-        Colaboradores
-      </div>
-      <div class="tab" data-tab="operacoes">
-        Operações
-      </div>
-      <div class="tab" data-tab="seguranca">
-        Diálogos de Segurança
-      </div>
-      <div class="tab" data-tab="descricao">
-        Descrição Operacional
-      </div>
-      <div class="tab" data-tab="checklist">
-        Check List 5S
-      </div>
-      <div class="tab" data-tab="indicadores">
-        Indicadores Registro
-      </div>
-    </div>
-  </header>
-  <main id="main-content">
-    <div id="formulario-content" class="tab-content active">
-      <h2>FORMULÁRIO</h2>
-      <form id="formulario-operacoes" name="formulario-operacoes">
-        <div class="form-grid">
-          <div class="coluna-esquerda">
-            <label for="cte">CTE</label> <input type="text" id="cte" name="cte" required=""> <label for="destino_origem">Destino/Origem</label> <input type="text" id="destino_origem" name="destino_origem" required=""> <label for="placa">Placa da Carreta</label> <input type="text" id="placa" name="placa" required=""> <label for="motorista">Motorista</label> <input type="text" id="motorista" name="motorista" required=""> <label for="transportadora">Transportadora</label> <select id="transportadora" name="transportadora" required="" onchange="mostrarOutroCampo(this)">
-              <option value="">
-                Selecione
-              </option>
-              <option value="PIZZATTOLOG">
-                PIZZATTOLOG
-              </option>
-              <option value="SULISTA">
-                SULISTA
-              </option>
-              <option value="WESTROCK">
-                WESTROCK
-              </option>
-              <option value="AXON">
-                AXON
-              </option>
-              <option value="CF LOG TRANS">
-                CF LOG TRANS
-              </option>
-              <option value="ATIVA">
-                ATIVA
-              </option>
-              <option value="BRIX">
-                BRIX
-              </option>
-              <option value="CF LOG">
-                CF LOG
-              </option>
-              <option value="COOPERCARGA">
-                COOPERCARGA
-              </option>
-              <option value="COSTA TEIXEIRA">
-                COSTA TEIXEIRA
-              </option>
-              <option value="DAIFFER LOGISTICA">
-                DAIFFER LOGISTICA
-              </option>
-              <option value="DALFER">
-                DALFER
-              </option>
-              <option value="EAGLE">
-                EAGLE
-              </option>
-              <option value="ESTRELA DO ORIENTE">
-                ESTRELA DO ORIENTE
-              </option>
-              <option value="MCP">
-                MCP
-              </option>
-              <option value="HORIZONTES/BR">
-                HORIZONTES/BR
-              </option>
-              <option value="MODULAR">
-                MODULAR
-              </option>
-              <option value="SOLISTICA">
-                SOLISTICA
-              </option>
-              <option value="TRANSBEM">
-                TRANSBEM
-              </option>
-              <option value="outro">
-                Outros
-              </option>
-            </select>
-            <div id="campoOutro">
-              <label for="outraTransportadora">Digite o nome da Transportadora</label> <input type="text" id="outraTransportadora" name="outraTransportadora" placeholder="Digite aqui...">
-            </div><label for="pallets">Pallets</label> <input type="number" id="pallets" name="pallets" required=""> <label for="carga_descarga">Tipo de Operação</label> <select id="carga_descarga" name="carga_descarga" required="">
-              <option value="">
-                Selecione
-              </option>
-              <option value="carga">
-                Carga
-              </option>
-              <option value="descarga">
-                Descarga
-              </option>
-            </select>
-          </div>
-          <div class="coluna-direita">
-            <label for="agendamento">Agendamento</label> <input type="datetime-local" id="agendamento" name="agendamento" required=""> <label for="inicio">Início</label> <input type="datetime-local" id="inicio" name="inicio" required=""> <label for="chegada">Chegada</label> <input type="datetime-local" id="chegada" name="chegada" required=""> <label for="termino">Término</label> <input type="datetime-local" id="termino" name="termino" required="">
-          </div>
-        </div><button type="submit" id="btnEnviar">ENVIAR</button>
-      </form>
-    </div>
-    <div id="colaboradores-content" class="tab-content">
-      <h2>COLABORADORES</h2>
-      <div style="margin-bottom: 20px;">
-        <label for="filtroTurnoColaboradores">Filtrar por Turno:</label> <select id="filtroTurnoColaboradores">
-          <option value="">
-            Todos
-          </option>
-          <option value="1º Turno">
-            1º Turno
-          </option>
-          <option value="2º Turno">
-            2º Turno
-          </option>
-          <option value="3º Turno">
-            3º Turno
-          </option>
-        </select> <label for="pesquisaNomeColaboradores">Pesquisar por Nome:</label> <input type="text" id="pesquisaNomeColaboradores" placeholder="Digite o nome...">
-      </div>
-      <div id="listaColaboradores">
-        <p>Carregando colaboradores...</p>
-      </div>
-    </div>
-    <div id="dialogos-content" class="tab-content">
-      <h2>DIÁLOGOS DE SEGURANÇA</h2>
-      <div id="fotosDSS"></div>
-      <form id="form-dialogos-foto" style="display: none;" name="form-dialogos-foto">
-        <label for="fotoDDS">Upload de Foto DDS (PNG)</label> <input type="file" id="fotoDDS" accept="image/png" required=""> <button type="button" id="btn-enviar-foto-dds">Enviar Foto DDS</button>
-      </form><button id="btn-abrir-upload-dds" style="margin-top: 20px; padding: 10px 15px; background: #007bff; color: white; border:none; border-radius: 8px; cursor:pointer;">Upload Nova Foto DDS</button>
-    </div>
-    <div id="checklist-content" class="tab-content">
-      <h2>CHECK LIST</h2>
-      <p>Conteúdo da aba "Check List" em construção...</p>
-    </div>
-    <div id="indicadores-content" class="tab-content">
-      <h2>INDICADORES DE REGISTRO</h2>
-      <canvas id="graficoIndicadores"></canvas>
-    </div>
-    <div id="descricao" class="tab-content">
-      <h2>Descrição Operacional</h2>
-      <p>Conteúdo de descrição operacional.</p>
-    </div>
-  </main><button id="fab-add-colaborador" class="fab-button" title="Adicionar Novo Colaborador">+</button>
-  <div id="formColaboradorModal" class="modal-overlay">
-    <form id="formAdicionarColaborador" class="modal-content" name="formAdicionarColaborador">
-      <h2>Adicionar Colaborador</h2><label for="nomeColaborador">Nome</label> <input type="text" id="nomeColaborador" name="nomeColaborador" required=""> <label for="cargoColaborador">Cargo</label> <input type="text" id="cargoColaborador" name="cargoColaborador" required=""> <label for="turnoColaborador">Turno</label> <select id="turnoColaborador" name="turnoColaborador" required="">
-        <option value="">
-          Selecione
-        </option>
-        <option value="1º Turno">
-          1º Turno
-        </option>
-        <option value="2º Turno">
-          2º Turno
-        </option>
-        <option value="3º Turno">
-          3º Turno
-        </option>
-      </select> <label for="fotoColaborador">Foto (PNG)</label> <input type="file" id="fotoColaborador" name="fotoColaborador" accept="image/png" required=""> <button type="submit" style="background: #28a745; color: white;">Salvar</button> <button type="button" id="btn-cancelar-add-colaborador" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
-    </form>
-  </div>
-  <div id="senhaColaboradorModal" class="modal-overlay">
-    <div class="modal-content">
-      <h2>Autorização - Colaborador</h2><label for="senhaAddColaborador">Digite a senha:</label> <input type="password" id="senhaAddColaborador" required=""> <button id="btn-verificar-senha-colaborador" style="background: #007bff; color: white;">Verificar</button> <button id="btn-cancelar-senha-colaborador" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
-      <p id="mensagem-senha-colaborador" class="modal-message"></p>
-    </div>
-  </div>
-  <div id="senhaDDSModal" class="modal-overlay">
-    <div class="modal-content">
-      <h2>Autorização - DDS</h2><label for="senhaDDS">Digite a senha:</label> <input type="password" id="senhaDDS" required=""> <button id="btn-verificar-senha-dds" style="background: #007bff; color: white;">Verificar</button> <button id="btn-cancelar-senha-dds" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
-      <p id="mensagem-senha-dds" class="modal-message"></p>
-    </div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
-  <script>
+    <header class="topo">
+        <img src="https://i.postimg.cc/15wPGs3w/logo-pizzattolog-removebg-preview.png" alt="Logo PIZZATTOLOG" class="logo">
+        <div class="tabs">
+            <div class="tab" data-tab="colaboradores">Colaboradores</div>
+            <div class="tab active" data-tab="operacoes">Operações</div> <div class="tab" data-tab="dialogos">Diálogos de Segurança</div> <div class="tab" data-tab="descricao">Descrição Operacional</div>
+            <div class="tab" data-tab="checklist">Check List 5S</div>
+            <div class="tab" data-tab="indicadores">Indicadores Registro</div>
+        </div>
+    </header>
 
+    <main id="main-content">
+        <div id="operacoes-content" class="tab-content active"> <h2>FORMULÁRIO</h2>
+            <form id="formulario-operacoes" name="formulario-operacoes">
+                <div class="form-grid">
+                    <div class="coluna-esquerda">
+                        <label for="cte">CTE</label> <input type="text" id="cte" name="cte" required="">
+                        <label for="destino_origem">Destino/Origem</label> <input type="text" id="destino_origem" name="destino_origem" required="">
+                        <label for="placa">Placa da Carreta</label> <input type="text" id="placa" name="placa" required="">
+                        <label for="motorista">Motorista</label> <input type="text" id="motorista" name="motorista" required="">
+                        <label for="transportadora">Transportadora</label>
+                        <select id="transportadora" name="transportadora" required="" onchange="mostrarOutroCampo(this)">
+                            <option value="">Selecione</option>
+                            <option value="PIZZATTOLOG">PIZZATTOLOG</option>
+                            <option value="SULISTA">SULISTA</option>
+                            <option value="WESTROCK">WESTROCK</option>
+                            <option value="AXON">AXON</option>
+                            <option value="CF LOG TRANS">CF LOG TRANS</option>
+                            <option value="ATIVA">ATIVA</option>
+                            <option value="BRIX">BRIX</option>
+                            <option value="CF LOG">CF LOG</option>
+                            <option value="COOPERCARGA">COOPERCARGA</option>
+                            <option value="COSTA TEIXEIRA">COSTA TEIXEIRA</option>
+                            <option value="DAIFFER LOGISTICA">DAIFFER LOGISTICA</option>
+                            <option value="DALFER">DALFER</option>
+                            <option value="EAGLE">EAGLE</option>
+                            <option value="ESTRELA DO ORIENTE">ESTRELA DO ORIENTE</option>
+                            <option value="MCP">MCP</option>
+                            <option value="HORIZONTES/BR">HORIZONTES/BR</option>
+                            <option value="MODULAR">MODULAR</option>
+                            <option value="SOLISTICA">SOLISTICA</option>
+                            <option value="TRANSBEM">TRANSBEM</option>
+                            <option value="outro">Outros</option>
+                        </select>
+                        <div id="campoOutro">
+                            <label for="outraTransportadora">Digite o nome da Transportadora</label>
+                            <input type="text" id="outraTransportadora" name="outraTransportadora" placeholder="Digite aqui...">
+                        </div>
+                        <label for="pallets">Pallets</label> <input type="number" id="pallets" name="pallets" required="">
+                        <label for="carga_descarga">Tipo de Operação</label>
+                        <select id="carga_descarga" name="carga_descarga" required="">
+                            <option value="">Selecione</option>
+                            <option value="carga">Carga</option>
+                            <option value="descarga">Descarga</option>
+                        </select>
+                    </div>
+                    <div class="coluna-direita">
+                        <label for="agendamento">Agendamento</label> <input type="datetime-local" id="agendamento" name="agendamento" required="">
+                        <label for="inicio">Início</label> <input type="datetime-local" id="inicio" name="inicio" required="">
+                        <label for="chegada">Chegada</label> <input type="datetime-local" id="chegada" name="chegada" required="">
+                        <label for="termino">Término</label> <input type="datetime-local" id="termino" name="termino" required="">
+                    </div>
+                </div>
+                <button type="submit" id="btnEnviar">ENVIAR</button>
+            </form>
+        </div>
 
+        <div id="colaboradores-content" class="tab-content">
+            <h2>COLABORADORES</h2>
+            <div style="margin-bottom: 20px;">
+                <label for="filtroTurnoColaboradores">Filtrar por Turno:</label>
+                <select id="filtroTurnoColaboradores">
+                    <option value="">Todos</option>
+                    <option value="1º Turno">1º Turno</option>
+                    <option value="2º Turno">2º Turno</option>
+                    <option value="3º Turno">3º Turno</option>
+                </select>
+                <label for="pesquisaNomeColaboradores">Pesquisar por Nome:</label>
+                <input type="text" id="pesquisaNomeColaboradores" placeholder="Digite o nome...">
+            </div>
+            <div id="listaColaboradores">
+                <p>Carregando colaboradores...</p>
+            </div>
+        </div>
+
+        <div id="dialogos-content" class="tab-content"> <h2>DIÁLOGOS DE SEGURANÇA</h2>
+            <div id="fotosDSS"></div>
+            <form id="form-dialogos-foto" style="display: none;" name="form-dialogos-foto">
+                <label for="fotoDDS">Upload de Foto DDS (PNG)</label>
+                <input type="file" id="fotoDDS" accept="image/png" required="">
+                <button type="button" id="btn-enviar-foto-dds">Enviar Foto DDS</button>
+            </form>
+            <button id="btn-abrir-upload-dds" style="margin-top: 20px; padding: 10px 15px; background: #007bff; color: white; border:none; border-radius: 8px; cursor:pointer;">Upload Nova Foto DDS</button>
+        </div>
+
+        <div id="descricao-content" class="tab-content"> <h2>Descrição Operacional</h2>
+            <p>Conteúdo de descrição operacional.</p>
+        </div>
+
+        <div id="checklist-content" class="tab-content">
+            <h2>CHECK LIST</h2>
+            <p>Conteúdo da aba "Check List" em construção...</p>
+        </div>
+
+        <div id="indicadores-content" class="tab-content">
+            <h2>INDICADORES DE REGISTRO</h2>
+            <canvas id="graficoIndicadores"></canvas>
+        </div>
+    </main>
+
+    <button id="fab-add-colaborador" class="fab-button" title="Adicionar Novo Colaborador">+</button>
+
+    <div id="formColaboradorModal" class="modal-overlay">
+        <form id="formAdicionarColaborador" class="modal-content" name="formAdicionarColaborador">
+            <h2>Adicionar Colaborador</h2>
+            <label for="nomeColaborador">Nome</label> <input type="text" id="nomeColaborador" name="nomeColaborador" required="">
+            <label for="cargoColaborador">Cargo</label> <input type="text" id="cargoColaborador" name="cargoColaborador" required="">
+            <label for="turnoColaborador">Turno</label>
+            <select id="turnoColaborador" name="turnoColaborador" required="">
+                <option value="">Selecione</option>
+                <option value="1º Turno">1º Turno</option>
+                <option value="2º Turno">2º Turno</option>
+                <option value="3º Turno">3º Turno</option>
+            </select>
+            <label for="fotoColaborador">Foto (PNG)</label> <input type="file" id="fotoColaborador" name="fotoColaborador" accept="image/png" required="">
+            <button type="submit" style="background: #28a745; color: white;">Salvar</button>
+            <button type="button" id="btn-cancelar-add-colaborador" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
+        </form>
+    </div>
+
+    <div id="senhaColaboradorModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Autorização - Colaborador</h2>
+            <label for="senhaAddColaborador">Digite a senha:</label>
+            <input type="password" id="senhaAddColaborador" required="">
+            <button id="btn-verificar-senha-colaborador" style="background: #007bff; color: white;">Verificar</button>
+            <button id="btn-cancelar-senha-colaborador" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
+            <p id="mensagem-senha-colaborador" class="modal-message"></p>
+        </div>
+    </div>
+
+    <div id="senhaDDSModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Autorização - DDS</h2>
+            <label for="senhaDDS">Digite a senha:</label>
+            <input type="password" id="senhaDDS" required="">
+            <button id="btn-verificar-senha-dds" style="background: #007bff; color: white;">Verificar</button>
+            <button id="btn-cancelar-senha-dds" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
+            <p id="mensagem-senha-dds" class="modal-message"></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 PIZZATTOLOG. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
         // ----------------------------------------------------
         // CONFIGURAÇÕES DO SUPABASE - PREENCHA COM SEUS DADOS REAIS!
         // Vá em seu painel Supabase > Project Settings > API
@@ -477,7 +444,11 @@
             }
         }
 
-        // Função para mostrar/esconder abas e carregar dados
+        /**
+         * Função para mostrar/esconder abas e carregar dados.
+         * Assume que o ID do conteúdo da aba é `data-tab`-content (ex: 'colaboradores-content').
+         * Exceto para a aba 'descricao' que tem o ID direto 'descricao'.
+         */
         function showTabContent(tabName) {
             // Remove a classe 'active' de todas as abas (os botões no header)
             tabs.forEach(t => t.classList.remove('active'));
@@ -485,17 +456,24 @@
             tabContents.forEach(content => content.classList.remove('active'));
 
             // Adiciona a classe 'active' na aba clicada
-            const activeTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
-            if (activeTab) {
-                activeTab.classList.add('active');
+            const activeTabButton = document.querySelector(`.tab[data-tab="${tabName}"]`);
+            if (activeTabButton) {
+                activeTabButton.classList.add('active');
             }
 
-            // Mostra o conteúdo da aba clicada
-            const activeContent = document.getElementById(`${tabName}-content`);
-            if (activeContent) {
-                activeContent.classList.add('active');
+            // Mostra o conteúdo da aba correspondente
+            // Tenta primeiro com o padrão 'tabName-content'
+            let targetContentId = `${tabName}-content`;
+            if (tabName === 'descricao') { // Caso especial para a aba 'descricao'
+                targetContentId = 'descricao';
             }
+            const activeContentDiv = document.getElementById(targetContentId);
 
+            if (activeContentDiv) {
+                activeContentDiv.classList.add('active');
+            } else {
+                console.warn(`Conteúdo da aba com ID '${targetContentId}' não encontrado para o tab '${tabName}'.`);
+            }
 
             // --- CONTROLE DE VISIBILIDADE DO BOTÃO FLUTUANTE ---
             if (tabName === 'colaboradores') {
@@ -519,7 +497,7 @@
                 }
             }
 
-            if (tabName === 'dialogos') {
+            if (tabName === 'dialogos') { // O data-tab é 'dialogos' e o id do conteúdo é 'dialogos-content'
                 carregarFotosDDS();
                 formDialogosFoto.style.display = 'none'; // Esconde o formulário de upload DDS por padrão
             }
@@ -642,6 +620,7 @@
             if (realtimeSubscriptionOperacoes) {
                 supabase.removeChannel(realtimeSubscriptionOperacoes);
                 realtimeSubscriptionOperacoes = null;
+                console.log("Assinatura Realtime para indicadores removida.");
             }
 
             try {
@@ -732,7 +711,7 @@
         // Event Listeners para as abas
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                const tabName = tab.dataset.tab;
+                const tabName = tab.dataset.tab; // Pega o valor do 'data-tab' (ex: "colaboradores", "operacoes")
                 showTabContent(tabName);
             });
         });
@@ -905,55 +884,49 @@
             });
         }
 
-
-        // Event Listener para envio de foto DDS
+        // Event listener para enviar foto DDS
         if (btnEnviarFotoDDS) {
             btnEnviarFotoDDS.addEventListener('click', async () => {
                 const fotoFile = fotoDDSInput.files[0];
 
                 if (!fotoFile) {
-                    alert('Por favor, selecione uma imagem para o DDS.');
+                    alert('Por favor, selecione uma foto para upload.');
                     return;
                 }
 
-                // Definir um nome de arquivo único para a foto
-                const fileName = `dds/${Date.now()}-${fotoFile.name}`;
+                const fileName = `${Date.now()}-${fotoFile.name}`;
+                const filePath = `dialogos/${fileName}`; // Pasta para fotos DDS
 
                 try {
-                    // 1. Fazer upload da foto para o Supabase Storage
                     const { data: uploadData, error: uploadError } = await supabase.storage
-                        .from(bucketName) // O nome do seu bucket
-                        .upload(fileName, fotoFile, {
-                            cacheControl: '3600', // Cache por 1 hora
-                            upsert: false // Não sobrescrever se o nome do arquivo já existir
+                        .from(bucketName)
+                        .upload(filePath, fotoFile, {
+                            cacheControl: '3600',
+                            upsert: false
                         });
 
                     if (uploadError) {
                         throw uploadError;
                     }
 
-                    // 2. Obter a URL pública da foto
                     const { data: publicUrlData } = supabase.storage
                         .from(bucketName)
-                        .getPublicUrl(fileName);
+                        .getPublicUrl(filePath);
 
                     const fotoUrl = publicUrlData.publicUrl;
 
-                    // 3. Inserir o registro no Supabase Database
                     const { data: insertData, error: insertError } = await supabase
                         .from('dialogos_seguranca')
-                        .insert([
-                            { foto_url: fotoUrl }
-                        ]);
+                        .insert([{ foto_url: fotoUrl }]);
 
                     if (insertError) {
                         throw insertError;
                     }
 
-                    alert('Foto DDS enviada e registrada com sucesso!');
-                    fotoDDSInput.value = ''; // Limpa o campo de seleção de arquivo
-                    formDialogosFoto.style.display = 'none'; // Esconde o formulário
-                    carregarFotosDDS(); // Recarrega a lista de fotos DDS
+                    alert('Foto DDS enviada com sucesso!');
+                    formDialogosFoto.style.display = 'none'; // Esconde o formulário de upload
+                    fotoDDSInput.value = ''; // Limpa o input de arquivo
+                    carregarFotosDDS(); // Recarrega as fotos para exibir a nova
                 } catch (error) {
                     console.error('Erro ao enviar foto DDS:', error.message);
                     alert(`Erro ao enviar foto DDS: ${error.message}`);
@@ -961,51 +934,21 @@
             });
         }
 
-        // Event Listeners para os filtros de colaboradores
-        filtroTurnoColaboradoresSelect.addEventListener('change', filtrarColaboradores);
-        pesquisaNomeColaboradoresInput.addEventListener('input', filtrarColaboradores);
+        // Filtro e Pesquisa para Colaboradores
+        if (filtroTurnoColaboradoresSelect) {
+            filtroTurnoColaboradoresSelect.addEventListener('change', filtrarColaboradores);
+        }
+        if (pesquisaNomeColaboradoresInput) {
+            pesquisaNomeColaboradoresInput.addEventListener('input', filtrarColaboradores);
+        }
 
 
-        // --- Inicialização ao carregar a página ---
+        // Inicializa a aba 'Operações' (formulário) ao carregar a página
         document.addEventListener('DOMContentLoaded', () => {
-            // Troca de abas
-    const tabs = document.querySelectorAll(".tab");
-    const tabContents = document.querySelectorAll(".tab-content");
-
-    tabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        const target = tab.getAttribute("data-tab");
-
-        tabs.forEach(t => t.classList.remove("active"));
-        tabContents.forEach(content => content.classList.remove("active"));
-
-        tab.classList.add("active");
-        document.getElementById(target).classList.add("active");
-
-        // Esconder campos ao trocar de aba
-        document.getElementById("senha-container").style.display = "none";
-        document.getElementById("formulario-container").style.display = "none";
-      });
-    });
-
-    function mostrarSenha() {
-      // Só mostra senha se estiver na aba "Colaboradores"
-      const colaboradoresAtivo = document.getElementById("colaboradores").classList.contains("active");
-      if (colaboradoresAtivo) {
-        document.getElementById("senha-container").style.display = "block";
-        document.getElementById("formulario-container").style.display = "none";
-      }
-    }
-
-    function verificarSenha() {
-      const senha = document.getElementById("senha").value;
-      if (senha === "pizzatto123") {
-        document.getElementById("senha-container").style.display = "none";
-        document.getElementById("formulario-container").style.display = "block";
-      } else {
-        alert("Senha incorreta!");
-      }
-    }
-  </script>
+            showTabContent('operacoes'); // Define 'operacoes' como a aba inicial
+            // Esconde o campo "Outro" no formulário de operações no carregamento
+            mostrarOutroCampo(document.getElementById('transportadora'));
+        });
+    </script>
 </body>
 </html>

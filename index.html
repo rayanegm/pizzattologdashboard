@@ -85,7 +85,7 @@
     <img src="https://i.postimg.cc/15wPGs3w/logo-pizzattolog-removebg-preview.png" alt="Logo PIZZATTOLOG" class="logo">
     <div class="tabs">
       <div class="tab" data-tab="colaboradores">Colaboradores</div>
-      <div class="tab active" data-tab="operacoes">Operações</div>
+      <div class="tab active" data-tab="operacoes">Formulario</div>
       <div class="tab" data-tab="dialogos">Diálogos de Segurança</div>
       <div class="tab" data-tab="descricao">Descrição Operacional</div>
       <div class="tab" data-tab="checklist">Check List 5S</div>
@@ -95,14 +95,79 @@
 
   <main class="main-content" id="main-content">
     <div id="operacoes-content" class="tab-content active"> 
-      <h2>FORMULÁRIO</h2>
-      <form id="formulario-operacoes" name="formulario-operacoes">
-        <!-- Form fields as in original code -->
+      <h2>FORMULÁRIO</h2
+      <main id="main-content">
+        <div id="operacoes-content" class="tab-content active"> <h2>FORMULÁRIO</h2>
+            <form id="formulario-operacoes" name="formulario-operacoes">
+                <div class="form-grid">
+                    <div class="coluna-esquerda">
+                        <label for="cte">CTE</label> <input type="text" id="cte" name="cte" required="">
+                        <label for="destino_origem">Destino/Origem</label> <input type="text" id="destino_origem" name="destino_origem" required="">
+                        <label for="placa">Placa da Carreta</label> <input type="text" id="placa" name="placa" required="">
+                        <label for="motorista">Motorista</label> <input type="text" id="motorista" name="motorista" required="">
+                        <label for="transportadora">Transportadora</label>
+                        <select id="transportadora" name="transportadora" required="" onchange="mostrarOutroCampo(this)">
+                            <option value="">Selecione</option>
+                            <option value="PIZZATTOLOG">PIZZATTOLOG</option>
+                            <option value="SULISTA">SULISTA</option>
+                            <option value="WESTROCK">WESTROCK</option>
+                            <option value="AXON">AXON</option>
+                            <option value="CF LOG TRANS">CF LOG TRANS</option>
+                            <option value="ATIVA">ATIVA</option>
+                            <option value="BRIX">BRIX</option>
+                            <option value="CF LOG">CF LOG</option>
+                            <option value="COOPERCARGA">COOPERCARGA</option>
+                            <option value="COSTA TEIXEIRA">COSTA TEIXEIRA</option>
+                            <option value="DAIFFER LOGISTICA">DAIFFER LOGISTICA</option>
+                            <option value="DALFER">DALFER</option>
+                            <option value="EAGLE">EAGLE</option>
+                            <option value="ESTRELA DO ORIENTE">ESTRELA DO ORIENTE</option>
+                            <option value="MCP">MCP</option>
+                            <option value="HORIZONTES/BR">HORIZONTES/BR</option>
+                            <option value="MODULAR">MODULAR</option>
+                            <option value="SOLISTICA">SOLISTICA</option>
+                            <option value="TRANSBEM">TRANSBEM</option>
+                            <option value="outro">Outros</option>
+                        </select>
+                        <div id="campoOutro">
+                            <label for="outraTransportadora">Digite o nome da Transportadora</label>
+                            <input type="text" id="outraTransportadora" name="outraTransportadora" placeholder="Digite aqui...">
+                        </div>
+                        <label for="pallets">Pallets</label> <input type="number" id="pallets" name="pallets" required="">
+                        <label for="carga_descarga">Tipo de Operação</label>
+                        <select id="carga_descarga" name="carga_descarga" required="">
+                            <option value="">Selecione</option>
+                            <option value="carga">Carga</option>
+                            <option value="descarga">Descarga</option>
+                        </select>
+                    </div>
+                    <div class="coluna-direita">
+                        <label for="agendamento">Agendamento</label> <input type="datetime-local" id="agendamento" name="agendamento" required="">
+                        <label for="inicio">Início</label> <input type="datetime-local" id="inicio" name="inicio" required="">
+                        <label for="chegada">Chegada</label> <input type="datetime-local" id="chegada" name="chegada" required="">
+                        <label for="termino">Término</label> <input type="datetime-local" id="termino" name="termino" required="">
+                    </div>
+                </div>
+                <button type="submit" id="btnEnviar">ENVIAR</button>
+            </form>
+        </div>
+
       </form>
     </div>
     <div id="colaboradores-content" class="tab-content">
       <h2>COLABORADORES</h2>
-      <!-- Content for colaboradores as in original code -->
+    <div style="margin-bottom: 20px;">
+                <label for="filtroTurnoColaboradores">Filtrar por Turno:</label>
+                <select id="filtroTurnoColaboradores">
+                    <option value="">Todos</option>
+                    <option value="1º Turno">1º Turno</option>
+                    <option value="2º Turno">2º Turno</option>
+                    <option value="3º Turno">3º Turno</option>
+                </select>
+                <label for="pesquisaNomeColaboradores">Pesquisar por Nome:</label>
+                <input type="text" id="pesquisaNomeColaboradores" placeholder="Digite o nome...">
+            </div>
+
     </div>
     <div id="dialogos-content" class="tab-content">
       <h2>DIÁLOGOS DE SEGURANÇA</h2>

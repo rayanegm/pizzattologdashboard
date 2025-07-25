@@ -221,7 +221,7 @@
 
     <header class="topo">
         <img src="https://i.postimg.cc/15wPGs3w/logo-pizzattolog-removebg-preview.png" alt="Logo PIZZATTOLOG" class="logo" />
-    <div class="tabs">
+        <div class="tabs">
             <div class="tab active" data-tab="formulario">Formulário</div>
             <div class="tab" data-tab="colaboradores">Colaboradores</div>
             <div class="tab" data-tab="dialogos">Diálogos de Segurança</div>
@@ -491,13 +491,12 @@
                 activeTab.classList.add('active');
             }
 
-       // Conteúdos das abas
-        const formularioContent = document.getElementById('formulario-content');
-        const colaboradoresContent = document.getElementById('colaboradores-content');
-        const dialogosContent = document.getElementById('dialogos-seguranca-content');
-        const checklistContent = document.getElementById('checklist-content');
-        const indicadoresContent = document.getElementById('indicadores-content');
-        const descricaoContent = document.getElementById('descricao-content');
+            // Mostra o conteúdo da aba clicada
+            const activeContent = document.getElementById(`${tabName}-content`);
+            if (activeContent) {
+                activeContent.classList.add('active');
+            }
+
 
             // --- CONTROLE DE VISIBILIDADE DO BOTÃO FLUTUANTE ---
             if (tabName === 'colaboradores') {
@@ -547,9 +546,11 @@
 
                 card.innerHTML = `
                     <img src="${fotoUrl}" alt="Foto de ${nome}">
-                    <h3>${nome}</h3>
-                    <p>${cargo}</p>
-                    <p>Turno: ${turno}</p>
+                    <div>
+                        <h3>${nome}</h3>
+                        <p>${cargo}</p>
+                        <p>Turno: ${turno}</p>
+                    </div>
                 `;
                 listaColaboradoresDiv.appendChild(card);
             });
@@ -564,7 +565,7 @@
                                         (colaborador.nome && colaborador.nome.toLowerCase().includes(termoPesquisa));
 
                 const turnoCorresponde = !filtroTurno || filtroTurno === "" ||
-                                         (colaborador.turno && colaborador.turno.toLowerCase() === filtroTurno.toLowerCase());
+                                            (colaborador.turno && colaborador.turno.toLowerCase() === filtroTurno.toLowerCase());
 
                 return nomeCorresponde && turnoCorresponde;
             });
@@ -605,7 +606,7 @@
             try {
                 const { data: dialogos, error: dialogosError } = await supabase
                     .from('dialogos_seguranca')
-                    .select('foto_url')
+                    .select('foto_url, created_at')
                     .order('created_at', { ascending: false }); // As mais recentes primeiro
 
                 if (dialogosError) {
@@ -635,6 +636,7 @@
         async function carregarIndicadores() {
             const ctx = document.getElementById('graficoIndicadores').getContext('2d');
 
+            // Destroi a instância anterior do gráfico e remove a assinatura realtime, se existirem
             if (chartInstance) {
                 chartInstance.destroy();
             }
@@ -766,23 +768,124 @@
             });
         }
 
-        // Event Listener para cancelar o formulário de adicionar colaborador
+        // Event Listener para cancelar o modal de adicionar colaborador
         if (btnCancelarAddColaborador) {
             btnCancelarAddColaborador.addEventListener('click', () => {
                 formColaboradorModal.style.display = 'none';
             });
         }
 
-        // Event Listener para o botão de abrir upload DDS
-        if (btnAbrirUploadDDS) {
-            btnAbrirUploadDDS.addEventListener('click', () => {
-                senhaDDSModal.style.display = 'flex';
-                mensagemSenhaDDS.textContent = ''; // Limpa a mensagem
-                senhaDDSInput.value = ''; // Limpa o campo
+        // Event listener para submissão do formulário de operações
+        if (formularioOperacoes) {
+            formularioOperacoes.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Impede o recarregamento da página
+
+                const formData = new FormData(formularioOperacoes);
+                const transportadoraFinal = formData.get('transportadora') === 'outro' ?
+                    formData.get('outraTransportadora') :
+                    formData.get('transportadora');
+
+                const dadosOperacao = {
+                    cte: formData.get('cte'),
+                    destino_origem: formData.get('destino_origem'),
+                    placa: formData.get('placa'),
+                    motorista: formData.get('motorista'),
+                    transportadora: transportadoraFinal,
+                    pallets: parseInt(formData.get('pallets')),
+                    carga_descarga: formData.get('carga_descarga'),
+                    agendamento: formData.get('agendamento'),
+                    inicio: formData.get('inicio'),
+                    chegada: formData.get('chegada'),
+                    termino: formData.get('termino')
+                };
+
+                try {
+                    const { data, error } = await supabase
+                        .from('operacoes')
+                        .insert([dadosOperacao]);
+
+                    if (error) {
+                        throw error;
+                    }
+
+                    alert('Dados da operação salvos com sucesso!');
+                    formularioOperacoes.reset(); // Limpa o formulário
+                    mostrarOutroCampo(document.getElementById('transportadora')); // Esconde o campo "Outro"
+                } catch (error) {
+                    console.error('Erro ao salvar dados da operação:', error.message);
+                    alert(`Erro ao salvar dados da operação: ${error.message}`);
+                }
             });
         }
 
-        // Event Listener para verificar a senha DDS
+        // Event listener para submissão do formulário de adicionar colaborador
+        if (formAdicionarColaborador) {
+            formAdicionarColaborador.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const nome = document.getElementById('nomeColaborador').value;
+                const cargo = document.getElementById('cargoColaborador').value;
+                const turno = document.getElementById('turnoColaborador').value;
+                const fotoFile = document.getElementById('fotoColaborador').files[0];
+
+                if (!fotoFile) {
+                    alert('Por favor, selecione uma foto para o colaborador.');
+                    return;
+                }
+
+                const fileName = `${Date.now()}-${fotoFile.name}`;
+                const filePath = `colaboradores/${fileName}`;
+
+                try {
+                    // 1. Upload da foto para o Supabase Storage
+                    const { data: uploadData, error: uploadError } = await supabase.storage
+                        .from(bucketName)
+                        .upload(filePath, fotoFile, {
+                            cacheControl: '3600',
+                            upsert: false
+                        });
+
+                    if (uploadError) {
+                        throw uploadError;
+                    }
+
+                    // 2. Obter a URL pública da foto
+                    const { data: publicUrlData } = supabase.storage
+                        .from(bucketName)
+                        .getPublicUrl(filePath);
+
+                    const fotoUrl = publicUrlData.publicUrl;
+
+                    // 3. Inserir dados do colaborador (incluindo a URL da foto) no Supabase Database
+                    const { data: insertData, error: insertError } = await supabase
+                        .from('colaboradores')
+                        .insert([{ nome, cargo, turno, foto_url: fotoUrl }]);
+
+                    if (insertError) {
+                        throw insertError;
+                    }
+
+                    alert('Colaborador adicionado com sucesso!');
+                    formAdicionarColaborador.reset();
+                    formColaboradorModal.style.display = 'none';
+                    carregarColaboradores(); // Recarrega a lista de colaboradores
+                } catch (error) {
+                    console.error('Erro ao adicionar colaborador:', error.message);
+                    alert(`Erro ao adicionar colaborador: ${error.message}`);
+                }
+            });
+        }
+
+        // Event Listener para abrir o formulário de upload de DDS
+        if (btnAbrirUploadDDS) {
+            btnAbrirUploadDDS.addEventListener('click', () => {
+                senhaDDSModal.style.display = 'flex';
+                mensagemSenhaDDS.textContent = '';
+                senhaDDSInput.value = '';
+            });
+        }
+
+        // Event Listener para verificar a senha de DDS
         if (btnVerificarSenhaDDS) {
             btnVerificarSenhaDDS.addEventListener('click', () => {
                 const senhaDigitada = senhaDDSInput.value;
@@ -796,192 +899,86 @@
             });
         }
 
-        // Event Listener para cancelar o modal de senha DDS
+        // Event Listener para cancelar o modal de senha de DDS
         if (btnCancelarSenhaDDS) {
             btnCancelarSenhaDDS.addEventListener('click', () => {
                 senhaDDSModal.style.display = 'none';
             });
         }
 
-        // Submissão do formulário de operações
-        if (formularioOperacoes) {
-            formularioOperacoes.addEventListener('submit', async (event) => {
-                event.preventDefault();
 
-                const transportadoraSelect = document.getElementById('transportadora');
-                const transportadora = transportadoraSelect.value === 'outro' ? document.getElementById('outraTransportadora').value : transportadoraSelect.value;
-                const cte = document.getElementById('cte').value;
-                const destinoOrigem = document.getElementById('destino_origem').value;
-                const placa = document.getElementById('placa').value;
-                const motorista = document.getElementById('motorista').value; // Certifique-se de ter um input com id="motorista"
-                const pallets = document.getElementById('pallets').value;
-                const cargaDescarga = document.getElementById('carga_descarga').value;
-                const agendamento = document.getElementById('agendamento').value;
-                const inicio = document.getElementById('inicio').value;
-                const chegada = document.getElementById('chegada').value;
-                const termino = document.getElementById('termino').value;
-
-                try {
-                    const { data, error } = await supabase
-                        .from('operacoes')
-                        .insert([{
-                            cte,
-                            destino_origem: destinoOrigem,
-                            placa,
-                            motorista, // Inclua se sua tabela tem essa coluna e se o input existe
-                            transportadora,
-                            pallets,
-                            carga_descarga: cargaDescarga,
-                            agendamento,
-                            inicio,
-                            chegada,
-                            termino
-                        }]);
-
-                    if (error) {
-                        throw error;
-                    }
-
-                    alert('Operação registrada com sucesso!');
-                    formularioOperacoes.reset();
-                    mostrarOutroCampo(transportadoraSelect); // Reseta a visibilidade do campo "outro"
-                } catch (error) {
-                    console.error('Erro ao registrar operação:', error.message);
-                    alert(`Erro ao registrar operação: ${error.message}`);
-                }
-            });
-        }
-
-        // Submissão do formulário de adicionar colaborador
-        if (formAdicionarColaborador) {
-            formAdicionarColaborador.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                const nome = document.getElementById('nomeColaborador').value;
-                const cargo = document.getElementById('cargoColaborador').value;
-                const turno = document.getElementById('turnoColaborador').value;
-                const fotoFile = document.getElementById('fotoColaborador').files[0];
-
-                let fotoUrl = null;
-
-                try {
-                    if (fotoFile) {
-                        const fileExtension = fotoFile.name.split('.').pop();
-                        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
-                        const filePath = `colaboradores/${fileName}`;
-
-                        const { data: uploadData, error: uploadError } = await supabase.storage
-                            .from(bucketName)
-                            .upload(filePath, fotoFile, {
-                                cacheControl: '3600',
-                                upsert: false
-                            });
-
-                        if (uploadError) {
-                            throw uploadError;
-                        }
-
-                        // Obter a URL pública da imagem
-                        const { data: publicUrlData } = supabase.storage
-                            .from(bucketName)
-                            .getPublicUrl(filePath);
-
-                        fotoUrl = publicUrlData.publicUrl;
-                    }
-
-                    const { data, error } = await supabase
-                        .from('colaboradores')
-                        .insert([{ nome, cargo, turno, foto_url: fotoUrl }]);
-
-                    if (error) {
-                        throw error;
-                    }
-
-                    alert('Colaborador adicionado com sucesso!');
-                    formAdicionarColaborador.reset();
-                    formColaboradorModal.style.display = 'none'; // Fecha o modal
-                    carregarColaboradores(); // Recarrega a lista de colaboradores
-                } catch (error) {
-                    console.error('Erro ao adicionar colaborador:', error.message);
-                    alert(`Erro ao adicionar colaborador: ${error.message}`);
-                }
-            });
-        }
-
-        // Submissão do formulário de upload de foto DDS (agora usando o botão de clique, não o evento submit do form)
+        // Event Listener para envio de foto DDS
         if (btnEnviarFotoDDS) {
-            btnEnviarFotoDDS.addEventListener('click', async (event) => {
-                event.preventDefault(); // Impede o comportamento padrão do botão se ele estiver dentro de um form
-
+            btnEnviarFotoDDS.addEventListener('click', async () => {
                 const fotoFile = fotoDDSInput.files[0];
 
                 if (!fotoFile) {
-                    alert('Por favor, selecione uma foto para upload.');
+                    alert('Por favor, selecione uma imagem para o DDS.');
                     return;
                 }
 
-                try {
-                    const fileExtension = fotoFile.name.split('.').pop();
-                    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
-                    const filePath = `dialogos_seguranca/${fileName}`;
+                // Definir um nome de arquivo único para a foto
+                const fileName = `dds/${Date.now()}-${fotoFile.name}`;
 
+                try {
+                    // 1. Fazer upload da foto para o Supabase Storage
                     const { data: uploadData, error: uploadError } = await supabase.storage
-                        .from(bucketName)
-                        .upload(filePath, fotoFile, {
-                            cacheControl: '3600',
-                            upsert: false
+                        .from(bucketName) // O nome do seu bucket
+                        .upload(fileName, fotoFile, {
+                            cacheControl: '3600', // Cache por 1 hora
+                            upsert: false // Não sobrescrever se o nome do arquivo já existir
                         });
 
                     if (uploadError) {
                         throw uploadError;
                     }
 
-                    // Obter a URL pública da imagem
+                    // 2. Obter a URL pública da foto
                     const { data: publicUrlData } = supabase.storage
                         .from(bucketName)
-                        .getPublicUrl(filePath);
+                        .getPublicUrl(fileName);
 
                     const fotoUrl = publicUrlData.publicUrl;
 
-                    const { data, error } = await supabase
+                    // 3. Inserir o registro no Supabase Database
+                    const { data: insertData, error: insertError } = await supabase
                         .from('dialogos_seguranca')
-                        .insert([{ foto_url: fotoUrl }]);
+                        .insert([
+                            { foto_url: fotoUrl }
+                        ]);
 
-                    if (error) {
-                        throw error;
+                    if (insertError) {
+                        throw insertError;
                     }
 
-                    alert('Foto de Diálogo de Segurança enviada com sucesso!');
-                    formDialogosFoto.reset();
+                    alert('Foto DDS enviada e registrada com sucesso!');
+                    fotoDDSInput.value = ''; // Limpa o campo de seleção de arquivo
                     formDialogosFoto.style.display = 'none'; // Esconde o formulário
-                    carregarFotosDDS(); // Recarrega as fotos de DDS
+                    carregarFotosDDS(); // Recarrega a lista de fotos DDS
                 } catch (error) {
-                    console.error('Erro ao enviar foto de DDS:', error.message);
-                    alert(`Erro ao enviar foto de DDS: ${error.message}`);
+                    console.error('Erro ao enviar foto DDS:', error.message);
+                    alert(`Erro ao enviar foto DDS: ${error.message}`);
                 }
             });
         }
 
-        // Event Listeners para filtros de colaboradores
-        if (pesquisaNomeColaboradoresInput) {
-            pesquisaNomeColaboradoresInput.addEventListener('input', filtrarColaboradores);
-        }
-        if (filtroTurnoColaboradoresSelect) {
-            filtroTurnoColaboradoresSelect.addEventListener('change', filtrarColaboradores);
-        }
+        // Event Listeners para os filtros de colaboradores
+        filtroTurnoColaboradoresSelect.addEventListener('change', filtrarColaboradores);
+        pesquisaNomeColaboradoresInput.addEventListener('input', filtrarColaboradores);
+
 
         // --- Inicialização ao carregar a página ---
         document.addEventListener('DOMContentLoaded', () => {
             // Mostra a primeira aba por padrão ao carregar a página
-            // Encontra a primeira aba e seu nome de dados
             const firstTab = document.querySelector('.tab');
             if (firstTab) {
-                const firstTabName = firstTab.dataset.tab;
-                showTabContent(firstTabName);
+                const firstTabName = firstTab.dataset.tab; // Pega o valor de data-tab="formulario"
+                showTabContent(firstTabName); // Chama a função para ativar a primeira aba
             } else {
                 console.warn("Nenhuma aba encontrada. Verifique os elementos com a classe 'tab'.");
             }
         });
+
     </script>
 </body>
 </html>

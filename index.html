@@ -17,8 +17,8 @@
             padding-top: 100px; /* Espaço para o topo fixo */
             color: #222;
             display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Alinha no topo, não no centro da tela */
+            justify-content: flex-start; /* Alinha no topo e à esquerda */
+            align-items: center; /* Centraliza horizontalmente o conteúdo se for menor que a largura do body */
             min-height: 100vh;
             flex-direction: column;
         }
@@ -79,14 +79,28 @@
         main {
             max-width: 1000px;
             margin: 60px auto; /* Mantém a margem para centralização horizontal */
-            background-color: transparent;
+            background-color: transparent; /* Será preenchido pelos conteúdos das abas */
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            padding: 40px;
+            padding: 0; /* O padding será nos conteúdos internos */
             min-height: 600px;
-            /* main não terá mais display:none nem opacity:0 inicialmente */
             transition: opacity 0.5s ease-in-out;
             width: 90%; /* Ajuste para não ficar muito largo em telas menores */
+            display: flex; /* Para flexibilizar o conteúdo interno */
+            flex-direction: column; /* Conteúdos empilhados verticalmente */
+            align-items: center; /* Centraliza o conteúdo das abas */
+            justify-content: flex-start; /* Alinha o conteúdo das abas no topo */
+        }
+        .tab-content {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 100%;
+            display: none; /* Escondido por padrão */
+        }
+        .tab-content.active {
+            display: block; /* Mostra o conteúdo ativo */
         }
 
         form {
@@ -143,15 +157,16 @@
             margin-top: 10px;
             display: none;
         }
-        /* Lista colaboradores*/
-        #lista-colaboradores {
+        /* Lista Colaboradores */
+        #colaboradores-content {
+            /* Estilo para o contêiner da aba de colaboradores */
             background: #fff;
             padding: 30px;
             border-radius: 12px;
-            max-width: 800px;
-            margin: auto;
+            max-width: 800px; /* Ajustado para ser centralizado dentro da main */
+            margin: auto; /* Centraliza */
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            display: none; /* Inicia escondido */
+            display: none; /* Inicia escondido, controlado pelo JS */
             min-height: 400px;
         }
         .colaboradores-card {
@@ -184,7 +199,7 @@
             font-size: 14px;
             color: #555;
         }
-        /* Modalcolaboradores e Modal de Senha (geral para modais overlay) */
+        /* Modal (geral para overlays) */
         .modal-overlay {
             display: none; /* Todos os overlays de modal começam escondidos */
             position: fixed;
@@ -221,248 +236,315 @@
             text-align: center;
         }
 
-        @media (max-width: 600px) {
+        /* DDS - Diálogos de Segurança */
+        #dialogos-seguranca-content {
+            display: none; /* Inicialmente escondido */
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 100%;
+            text-align: center;
+        }
+        #fotosDSS {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            justify-items: center;
+        }
+        .foto-dss {
+            width: 100%;
+            max-width: 200px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #form-dialogos-foto {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        #form-dialogos-foto label, #form-dialogos-foto input {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* Indicadores */
+        #indicadores-content {
+            display: none; /* Inicialmente escondido */
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+        #graficoIndicadores {
+            max-width: 100%;
+            height: 400px; /* Altura fixa para o gráfico */
+            margin-top: 20px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .topo {
+                flex-direction: column;
+                padding: 15px 20px;
+            }
+            .tabs {
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-top: 15px;
+            }
+            .tab {
+                flex: none; /* Não cresce, mantém o tamanho do conteúdo */
+                width: auto;
+                padding: 10px 15px;
+            }
+            main {
+                margin: 30px auto;
+                padding: 0; /* Padding será nos conteúdos das abas */
+            }
+            .tab-content {
+                padding: 20px;
+            }
             .form-grid {
                 flex-direction: column;
+                gap: 20px;
             }
             .coluna-esquerda, .coluna-direita {
                 min-width: 100%;
             }
-            .funcionario-card {
+            .colaboradores-card {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .funcionario-foto {
+            .colaboradores-foto {
                 margin-bottom: 10px;
             }
         }
     </style>
 </head>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <body>
 
-    <header class="topo"> <img src="https://i.postimg.cc/15wPGs3w/logo-pizzattolog-removebg-preview.png" alt="Logo PIZZATTOLOG" class="logo" />
-  <img src="https://i.postimg.cc/15wPGs3w/logo-pizzattolog-removebg-preview.png" alt="Logo PIZZATTOLOG" class="logo" />
-  <div class="tabs">
-    <div class="tab active" data-tab="formulario">Formulário</div>
-    <div class="tab" data-tab="colaboradores">Colaboradores</div>
-    <div class="tab" data-tab="dialogos">Diálogos de Segurança</div>
-    <div class="tab" data-tab="descricao">Descrição Operacional</div>
-    <div class="tab" data-tab="checklist">Check List 5S</div>
-    <div class="tab" data-tab="indicadores">Indicadores Registro</div>
-  </div>
-</header>
+    <header class="topo">
+        <img src="https://i.postimg.cc/15wPGs3w/logo-pizzattolog-removebg-preview.png" alt="Logo PIZZATTOLOG" class="logo" />
+        <div class="tabs">
+            <div class="tab active" data-tab="formulario">Formulário</div>
+            <div class="tab" data-tab="colaboradores">Colaboradores</div>
+            <div class="tab" data-tab="dialogos">Diálogos de Segurança</div>
+            <div class="tab" data-tab="checklist">Check List</div>
+            <div class="tab" data-tab="indicadores">Indicadores</div>
+            <div class="tab" data-tab="descricao">Descrição Operacional</div>
+        </div>
+    </header>
 
-    <main id="main-content"> <form id="formulario" action="#" method="post">
-            <h2>FORMULARIO</h2>
+    <main id="main-content">
+        <div id="formulario-content" class="tab-content active">
+            <h2>FORMULÁRIO</h2>
+            <form id="formulario-operacoes" action="#" method="post">
+                <div class="form-grid">
+                    <div class="coluna-esquerda">
+                        <label for="cte">CTE</label>
+                        <input type="text" id="cte" name="cte" required />
 
-            <div class="form-grid">
-                <div class="coluna-esquerda">
-                    <label for="cte">CTE</label>
-                    <input type="text" id="cte" name="cte" required />
+                        <label for="destino_origem">Destino/Origem</label>
+                        <input type="text" id="destino_origem" name="destino_origem" required />
 
-                    <label for="destino_origem">Destino/Origem</label>
-                    <input type="text" id="destino_origem" name="destino_origem" required />
+                        <label for="placa">Placa da Carreta</label>
+                        <input type="text" id="placa" name="placa" required />
 
-                    <label for="placa">Placa da Carreta</label>
-                    <input type="text" id="placa" name="placa" required />
+                        <label for="transportadora">Transportadora</label>
+                        <select id="transportadora" name="transportadora" required onchange="mostrarOutroCampo(this)">
+                            <option value="">Selecione</option>
+                            <option value="PIZZATTOLOG">PIZZATTOLOG</option>
+                            <option value="SULISTA">SULISTA</option>
+                            <option value="WESTROCK">WESTROCK</option>
+                            <option value="AXON">AXON</option>
+                            <option value="CF LOG TRANS">CF LOG TRANS</option>
+                            <option value="ATIVA">ATIVA</option>
+                            <option value="BRIX">BRIX</option>
+                            <option value="CF LOG">CF LOG</option>
+                            <option value="COOPERCARGA">COOPERCARGA</option>
+                            <option value="COSTA TEIXEIRA">COSTA TEIXEIRA</option>
+                            <option value="DAIFFER LOGISTICA">DAIFFER LOGISTICA</option>
+                            <option value="DALFER">DALFER</option>
+                            <option value="EAGLE">EAGLE</option>
+                            <option value="ESTRELA DO ORIENTE">ESTRELA DO ORIENTE</option>
+                            <option value="MCP">MCP</option>
+                            <option value="HORIZONTES/BR">HORIZONTES/BR</option>
+                            <option value="MODULAR">MODULAR</option>
+                            <option value="SOLISTICA">SOLISTICA</option>
+                            <option value="TRANSBEM">TRANSBEM</option>
+                            <option value="outro">Outros</option>
+                        </select>
 
-                    <label for="transportadora">Transportadora</label>
-                    <select id="transportadora" name="transportadora" required onchange="mostrarOutroCampo(this)">
-                        <option value="">Selecione</option>
-                        <option value="PIZZATTOLOG">PIZZATTOLOG</option>
-                        <option value="SULISTA">SULISTA</option>
-                        <option value="WESTROCK">WESTROCK</option>
-                        <option value="AXON">AXON</option>
-                        <option value="CF LOG TRANS">CF LOG TRANS</option>
-                        <option value="ATIVA">ATIVA</option>
-                        <option value="BRIX">BRIX</option>
-                        <option value="CF LOG">CF LOG</option>
-                        <option value="COOPERCARGA">COOPERCARGA</option>
-                        <option value="COSTA TEIXEIRA">COSTA TEIXEIRA</option>
-                        <option value="DAIFFER LOGISTICA">DAIFFER LOGISTICA</option>
-                        <option value="DALFER">DALFER</option>
-                        <option value="EAGLE">EAGLE</option>
-                        <option value="ESTRELA DO ORIENTE">ESTRELA DO ORIENTE</option>
-                        <option value="MCP">MCP</option>
-                        <option value="HORIZONTES/BR">HORIZONTES/BR</option>
-                        <option value="MODULAR">MODULAR</option>
-                        <option value="SOLISTICA">SOLISTICA</option>
-                        <option value="TRANSBEM">TRANSBEM</option>
-                        <option value="outro">Outros</option>
-                    </select>
+                        <div id="campoOutro">
+                            <label for="outraTransportadora">Digite o nome da Transportadora</label>
+                            <input type="text" id="outraTransportadora" name="outraTransportadora" placeholder="Digite aqui..." />
+                        </div>
 
-                    <div id="campoOutro">
-                        <label for="outraTransportadora">Digite o nome da Transportadora</label>
-                        <input type="text" id="outraTransportadora" name="outraTransportadora" placeholder="Digite aqui..." />
+                        <label for="pallets">Pallets</label>
+                        <input type="number" id="pallets" name="pallets" required />
+
+                        <label for="carga_descarga">Tipo de Operação</label>
+                        <select id="carga_descarga" name="carga_descarga" required>
+                            <option value="">Selecione</option>
+                            <option value="carga">Carga</option>
+                            <option value="descarga">Descarga</option>
+                        </select>
                     </div>
 
-                    <label for="pallets">Pallets</label>
-                    <input type="number" id="pallets" name="pallets" required />
+                    <div class="coluna-direita">
+                        <label for="agendamento">Agendamento</label>
+                        <input type="datetime-local" id="agendamento" name="agendamento" required />
 
-                    <label for="carga_descarga">Tipo de Operação</label>
-                    <select id="carga_descarga" name="carga_descarga" required>
-                        <option value="">Selecione</option>
-                        <option value="carga">Carga</option>
-                        <option value="descarga">Descarga</option>
-                    </select>
+                        <label for="inicio">Início</label>
+                        <input type="datetime-local" id="inicio" name="inicio" required />
+
+                        <label for="chegada">Chegada</label>
+                        <input type="datetime-local" id="chegada" name="chegada" required />
+
+                        <label for="termino">Término</label>
+                        <input type="datetime-local" id="termino" name="termino" required />
+                    </div>
                 </div>
-
-                <div class="coluna-direita">
-                    <label for="agendamento">Agendamento</label>
-                    <input type="datetime-local" id="agendamento" name="agendamento" required />
-
-                    <label for="inicio">Início</label>
-                    <input type="datetime-local" id="inicio" name="inicio" required />
-
-                    <label for="chegada">Chegada</label>
-                    <input type="datetime-local" id="chegada" name="chegada" required />
-
-                    <label for="termino">Término</label>
-                    <input type="datetime-local" id="termino" name="termino" required />
-                </div>
-            </div>
-
-            <button type="submit" id="btnEnviar">ENVIAR</button>
-        </form>
-
-        <div id="lista-colaboradores">
-            <h2>colaboradores</h2>
-            <div id="colaboradores-lista"></div>
-
-            <button id="btn-add-colaboradores" style="margin-top: 20px; padding: 10px 15px; background: #007bff; color: white; border:none; border-radius: 8px; cursor:pointer;">
-                ➕ Adicionar colaboradores
-            </button>
-        </div>
-
-        <div id="formcolaboradoresModal" class="modal-overlay">
-            <form id="formcolaboradores" class="modal-content"> 
-                <h2>Adicionar colaboradores</h2>
-
-                <label for="nomecolaboradores">Nome</label>
-                <input type="text" id="nomecolaboradores" required />
-
-                <label for="cargocolaboradores">Cargo</label>
-                <input type="text" id="cargocolaboradores" required />
-
-                <label for="turnocolaboradores">Turno</label>
-                <select id="turnocolaboradores" name="turno" required>
-                    <option value="">Selecione</option>
-                    <option value="1º Turno">1º Turno</option>
-                    <option value="2º Turno">2º Turno</option>
-                    <option value="3º Turno">3º Turno</option>
-                </select>
-
-                <label for="fotocolaboradores">Foto (PNG)</label>
-                <input type="file" id="fotocolaboradores" accept="image/png" required />
-
-                <button type="submit" style="background: #28a745; color: white;">Salvar</button>
-                <button type="button" id="btn-cancelar" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
+                <button type="submit" id="btnEnviar">ENVIAR</button>
             </form>
         </div>
 
-        <div id="senhacolaboradoresModal" class="modal-overlay">
-            <div class="modal-content">
-                <h2>Autorização</h2>
-                <label for="senhaAddcolaboradores">Digite a senha:</label>
-                <input type="password" id="senhaAddcolaboradores" required />
-                <button id="btn-verificar-senha-colaboradores" style="background: #007bff; color: white;">Verificar</button>
-                <button id="btn-cancelar-senha-colaboradores" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
-                <p id="mensagem-senha-colaboradores" class="modal-message"></p>
-            </div>
+        <div id="colaboradores-content" class="tab-content">
+            <h2>COLABORADORES</h2>
+            <div id="colaboradores-lista"></div>
+            <button id="btn-add-colaborador" style="margin-top: 20px; padding: 10px 15px; background: #007bff; color: white; border:none; border-radius: 8px; cursor:pointer;">
+                ➕ Adicionar Colaborador
+            </button>
         </div>
 
-    <script>
-  function mostrarSenha() {
-    document.getElementById('senhaContainer').style.display = 'block';
-  }
+        <div id="dialogos-seguranca-content" class="tab-content">
+            <h2>DIÁLOGOS DE SEGURANÇA</h2>
+            <div id="fotosDSS">
+                </div>
+            <form id="form-dialogos-foto" style="display: none;"> <label for="fotoDDS">Upload de Foto DDS (PNG)</label>
+                <input type="file" id="fotoDDS" accept="image/png" required />
+                <button type="button" id="btn-enviar-foto-dds">Enviar Foto DDS</button>
+            </form>
+            <button id="btn-abrir-upload-dds" style="margin-top: 20px; padding: 10px 15px; background: #007bff; color: white; border:none; border-radius: 8px; cursor:pointer;">
+                Upload Nova Foto DDS
+            </button>
+        </div>
 
-  async function enviarFotoDSS() {
-    const senha = document.getElementById('senha').value;
-    if (senha !== 'suaSenha123') {
-      alert('Senha incorreta!');
-      return;
-    }
+        <div id="checklist-content" class="tab-content">
+            <h2>CHECK LIST</h2>
+            <p>Conteúdo da aba "Check List" em construção...</p>
+            </div>
 
-    const input = document.getElementById('fotoDSS');
-    if (!input.files[0]) {
-      alert('Selecione uma imagem.');
-      return;
-    }
+        <div id="indicadores-content" class="tab-content">
+            <h2>INDICADORES DE REGISTRO</h2>
+            <canvas id="graficoIndicadores"></canvas>
+        </div>
 
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'addDSS',
-          foto: reader.result
-        }),
-        headers: { 'Content-Type': 'application/json' }
-      });
-      alert('Foto enviada!');
-      document.getElementById('senha').value = '';
-      document.getElementById('senhaContainer').style.display = 'none';
-      carregarFotosDSS();
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
-</script>
-
-
-  <!-- INDICADORES -->
-  <section>
-    <h2>Indicadores</h2>
-    <canvas id="graficoIndicadores" width="400" height="200"></canvas>
-  </section>
+        <div id="descricao-content" class="tab-content">
+            <h2>DESCRIÇÃO OPERACIONAL</h2>
+            <p>Conteúdo da aba "Descrição Operacional" em construção...</p>
+            </div>
 
     </main>
 
-    <script>
+    <div id="formColaboradorModal" class="modal-overlay">
+        <form id="formAdicionarColaborador" class="modal-content">
+            <h2>Adicionar Colaborador</h2>
+            <label for="nomeColaborador">Nome</label>
+            <input type="text" id="nomeColaborador" name="nomeColaborador" required />
 
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzqIZhmRvaVowC-aVuaXqWIgXSa3ooWBoLL3EQLjYWMeDPmsgryG0i-6sjBdGRpCltXvA/exec';
+            <label for="cargoColaborador">Cargo</label>
+            <input type="text" id="cargoColaborador" name="cargoColaborador" required />
 
-        // --- Elementos do Painel (agora visíveis por padrão) ---
-        const mainContent = document.getElementById('main-content');
-        const headerTopo = document.querySelector('.topo');
+            <label for="turnoColaborador">Turno</label>
+            <select id="turnoColaborador" name="turnoColaborador" required>
+                <option value="">Selecione</option>
+                <option value="1º Turno">1º Turno</option>
+                <option value="2º Turno">2º Turno</option>
+                <option value="3º Turno">3º Turno</option>
+            </select>
 
-        // --- Elementos do Modal de Adicionar Funcionário ---
-        const tabs = document.querySelectorAll('.tab');
-        const formOperacoes = document.getElementById('formulario');
-        const divcolaboradores = document.getElementById('lista-colaboradores');
-        const listacolaboradoresDiv = document.getElementById('colaboradores-lista');
-        const btnAddcolaboradores = document.getElementById('btn-add-colaboradores');
-        const formcolaboradoresModal = document.getElementById('formcolaboradoresModal'); 
-        const formcolaboradores = document.getElementById('formcolaboradores');
-        const btnCancelar = document.getElementById('btn-cancelar');
+            <label for="fotoColaborador">Foto (PNG)</label>
+            <input type="file" id="fotoColaborador" name="fotoColaborador" accept="image/png" required />
 
-        // --- Elementos do Modal de Senha para Adicionar colaboradores ---
-        const senhacolaboradoresModal = document.getElementById('senhacolaboradoresModal');
-        const senhaAddcolaboradoresInput = document.getElementById('senhaAddcolaboradores');
-        const btnVerificarSenhacolaboradores = document.getElementById('btn-verificar-senha-colaboradores');
-        const btnCancelarSenhacolaboradores = document.getElementById('btn-cancelar-senha-colaboradores');
-        const mensagemSenhacolaboradores = document.getElementById('mensagem-senha-colaboradores');
-
-        const SENHA_CORRETA_ADD_COLABORADORES = "davidmend123"; // Senha específica para o modal de adicionar colaboradores
-
-        <!-- Modal de Senha DDS -->
-<div id="senhaDSSModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-  background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000;">
-  <div style="background: white; padding: 20px 30px; border-radius: 10px; width: 300px; text-align: center; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
-    <h3>Digite a Senha</h3>
-    <input type="password" id="senhaDSS" style="width: 100%; padding: 10px; margin-top: 10px;" placeholder="Senha..." />
-    <div style="margin-top: 15px;">
-      <button id="btn-verificar-senha-dss" style="margin-right: 10px; padding: 8px 12px;">Confirmar</button>
-      <button id="btn-cancelar-senha-dss" style="padding: 8px 12px;">Cancelar</button>
+            <button type="submit" style="background: #28a745; color: white;">Salvar</button>
+            <button type="button" id="btn-cancelar-add-colaborador" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
+        </form>
     </div>
-    <p id="mensagem-senha-dss" style="color: red; margin-top: 10px;"></p>
-  </div>
-</div>
 
+    <div id="senhaColaboradorModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Autorização - Colaborador</h2>
+            <label for="senhaAddColaborador">Digite a senha:</label>
+            <input type="password" id="senhaAddColaborador" required />
+            <button id="btn-verificar-senha-colaborador" style="background: #007bff; color: white;">Verificar</button>
+            <button id="btn-cancelar-senha-colaborador" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
+            <p id="mensagem-senha-colaborador" class="modal-message"></p>
+        </div>
+    </div>
+
+    <div id="senhaDDSModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Autorização - DDS</h2>
+            <label for="senhaDDS">Digite a senha:</label>
+            <input type="password" id="senhaDDS" required />
+            <button id="btn-verificar-senha-dds" style="background: #007bff; color: white;">Verificar</button>
+            <button id="btn-cancelar-senha-dds" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
+            <p id="mensagem-senha-dds" class="modal-message"></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzqIZhmRvaVowC-aVuaXqWIgXSa3ooWBoLL3EQLjYWMeDPmsgryG0i-6sjBdGRpCltXvA/exec';
+        const SENHA_COLABORADORES = "davidmend123";
+        const SENHA_DDS = "davidmend123"; // Assumindo a mesma senha para DDS
+
+        // Seletores de elementos DOM
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Conteúdos das abas
+        const formularioContent = document.getElementById('formulario-content');
+        const colaboradoresContent = document.getElementById('colaboradores-content');
+        const dialogosContent = document.getElementById('dialogos-seguranca-content');
+        const checklistContent = document.getElementById('checklist-content');
+        const indicadoresContent = document.getElementById('indicadores-content');
+        const descricaoContent = document.getElementById('descricao-content');
+
+        // Modais e seus elementos
+        const formColaboradorModal = document.getElementById('formColaboradorModal');
+        const senhaColaboradorModal = document.getElementById('senhaColaboradorModal');
+        const senhaDDSModal = document.getElementById('senhaDDSModal');
+
+        const btnAddColaborador = document.getElementById('btn-add-colaborador');
+        const btnCancelarAddColaborador = document.getElementById('btn-cancelar-add-colaborador');
+        const senhaAddColaboradorInput = document.getElementById('senhaAddColaborador');
+        const btnVerificarSenhaColaborador = document.getElementById('btn-verificar-senha-colaborador');
+        const btnCancelarSenhaColaborador = document.getElementById('btn-cancelar-senha-colaborador');
+        const mensagemSenhaColaborador = document.getElementById('mensagem-senha-colaborador');
+
+        const btnAbrirUploadDDS = document.getElementById('btn-abrir-upload-dds');
+        const formDialogosFoto = document.getElementById('form-dialogos-foto');
+        const fotoDDSInput = document.getElementById('fotoDDS');
+        const btnEnviarFotoDDS = document.getElementById('btn-enviar-foto-dds');
+        const senhaDDSInput = document.getElementById('senhaDDS');
+        const btnVerificarSenhaDDS = document.getElementById('btn-verificar-senha-dds');
+        const btnCancelarSenhaDDS = document.getElementById('btn-cancelar-senha-dds');
+        const mensagemSenhaDDS = document.getElementById('mensagem-senha-dds');
+
+        // --- Funções Auxiliares ---
 
         function mostrarOutroCampo(select) {
             const campoOutro = document.getElementById('campoOutro');
-            if(select.value === 'outro'){
+            if (select.value === 'outro') {
                 campoOutro.style.display = 'block';
                 document.getElementById('outraTransportadora').setAttribute('required', 'required');
             } else {
@@ -471,222 +553,314 @@
             }
         }
 
-        // --- Lógica para Alternar Abas (formulario/colaboradores) ---
-        tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
+        function showTabContent(tabName) {
+            // Remove a classe 'active' de todas as abas
+            tabs.forEach(t => t.classList.remove('active'));
+            // Esconde todos os conteúdos das abas
+            tabContents.forEach(content => content.classList.remove('active'));
 
-        const aba = tab.dataset.tab;
+            // Adiciona a classe 'active' na aba clicada
+            const activeTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+            if (activeTab) activeTab.classList.add('active');
 
-        // Oculta todos os conteúdos
-        formOperacoes.style.display = 'none';
-        divFuncionarios.style.display = 'none';
-        mainContent.innerHTML = ''; // Limpa o conteúdo atual
+            // Mostra o conteúdo da aba clicada
+            const activeContent = document.getElementById(`${tabName}-content`);
+            if (activeContent) activeContent.classList.add('active');
 
-        if (aba === 'formulario') {
-            formOperacoes.style.display = 'block';
-        } else if (aba === 'colaboradores') {
-            divFuncionarios.style.display = 'block';
-            carregarFuncionarios();
-        } else {
-            // Conteúdo fictício para abas novas
-            mainContent.innerHTML = `<div style="padding: 40px; background: white; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); min-height: 400px;">
-                <h2>${tab.textContent}</h2>
-                <p>Conteúdo de "${tab.textContent}" em construção...</p>
-            </div>`;
+            // Chamadas específicas para carregar dados/inicializar
+            if (tabName === 'colaboradores') {
+                carregarColaboradores();
+            } else if (tabName === 'indicadores') {
+                carregarIndicadores();
+            } else if (tabName === 'dialogos') {
+                carregarFotosDDS();
+                formDialogosFoto.style.display = 'none'; // Esconde o formulário de upload DDS por padrão
+            }
         }
-    });
-});
 
+        // --- Funções de Carregamento de Dados ---
 
-         // Carregar colaboradores
-    async function carregarColaboradores() {
-      const res = await fetch(`${API_URL}?action=getcolaboradores`);
-      const dados = await res.json();
-      const lista = document.getElementById('listaColaboradores');
-      lista.innerHTML = dados.map(p => `
-        <div class="colaborador">
-          <img src="${p.foto}" />
-          <div><strong>${p.nome}</strong></div>
-          <div>${p.turno}</div>
-        </div>
-      `).join('');
-    }
+        async function carregarColaboradores() {
+            try {
+                const res = await fetch(`${API_URL}?action=getColaboradores`);
+                const dados = await res.json();
+                const lista = document.getElementById('colaboradores-lista');
+                if (!dados || dados.length === 0) {
+                    lista.innerHTML = '<p>Nenhum colaborador cadastrado.</p>';
+                    return;
+                }
+                lista.innerHTML = dados.map(p => `
+                    <div class="colaboradores-card">
+                        <img src="${p.foto}" class="colaboradores-foto" alt="${p.nome}" />
+                        <div class="colaboradores-info">
+                            <div class="colaboradores-nome"><strong>${p.nome}</strong></div>
+                            <div class="colaboradores-cargo">${p.cargo}</div>
+                            <div class="colaboradores-turno">${p.turno}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar colaboradores:', error);
+                document.getElementById('colaboradores-lista').innerHTML = '<p>Erro ao carregar colaboradores.</p>';
+            }
+        }
 
-        // --- Lógica do Botão "Adicionar colaboradores" (agora mostra o modal de senha) ---
-        btnAddcolaboradores.addEventListener('click', () => {
-            senhacolaboradoresModal.style.display = 'flex'; // Abre o modal de senha
-            senhaAddcolaboradoresInput.value = ''; // Limpa o campo de senha
-            mensagemSenhacolaboradores.textContent = ''; // Limpa a mensagem de erro
-            senhaAddcolaboradoresInput.focus();
+        async function carregarFotosDDS() {
+            try {
+                const res = await fetch(`${API_URL}?action=getDialogos`);
+                const dados = await res.json();
+                const fotosContainer = document.getElementById('fotosDSS');
+                if (!dados || dados.length === 0) {
+                    fotosContainer.innerHTML = '<p>Nenhuma foto de DDS disponível.</p>';
+                    return;
+                }
+                fotosContainer.innerHTML = dados.map(fotoUrl => `
+                    <img src="${fotoUrl}" class="foto-dss" alt="Diálogo de Segurança" />
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar fotos DDS:', error);
+                document.getElementById('fotosDSS').innerHTML = '<p>Erro ao carregar fotos DDS.</p>';
+            }
+        }
+
+        async function carregarIndicadores() {
+            try {
+                const res = await fetch(`${API_URL}?action=getIndicadores`);
+                const dados = await res.json();
+                const ctx = document.getElementById('graficoIndicadores').getContext('2d');
+
+                // Destrói o gráfico existente antes de criar um novo, se houver
+                if (window.myChart) {
+                    window.myChart.destroy();
+                }
+
+                window.myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: dados.labels,
+                        datasets: [{
+                            label: 'Qtd de Operações',
+                            data: dados.valores,
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Registro de Operações por Transportadora/Mês'
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Erro ao carregar indicadores:', error);
+                const indicadoresDiv = document.getElementById('indicadores-content');
+                indicadoresDiv.innerHTML = '<h2>INDICADORES DE REGISTRO</h2><p>Erro ao carregar dados do gráfico.</p>';
+            }
+        }
+
+        // --- Event Listeners ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializa a exibição da aba de formulário ao carregar a página
+            showTabContent('formulario');
         });
 
-        // --- Lógica para Verificar a Senha do Modal "Adicionar colaboradores" ---
-        btnVerificarSenhacolaboradores.addEventListener('click', () => {
-            const senhaDigitada = senhaAddcolaboradoresInput.value;
-            if (senhaDigitada === SENHA_CORRETA_ADD_COLABORADORES) { 
-                mensagemSenhacolaboradores.textContent = '';
-                senhacolaboradoresModal.style.display = 'none'; // Fecha o modal de senha
-                abrirModalcolaboradores(); // Abre o modal de adicionar colaboradores
-            } else {
-                mensagemSenhacolaboradores.textContent = 'Senha incorreta.';
-                senhaAddcolaboradoresInput.value = ''; 
+        // Evento de clique nas abas
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                showTabContent(tab.dataset.tab);
+            });
+        });
+
+        // Formulário de Operações
+        document.getElementById('formulario-operacoes').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = new FormData(e.target);
+            const dados = Object.fromEntries(form);
+
+            // Ajusta o valor da transportadora se 'outro' for selecionado
+            if (dados.transportadora === 'outro') {
+                const outraTransportadora = document.getElementById('outraTransportadora').value;
+                if (!outraTransportadora.trim()) {
+                    alert('Por favor, digite o nome da outra transportadora.');
+                    return;
+                }
+                dados.transportadora = outraTransportadora;
+            }
+            delete dados.outraTransportadora; // Remove o campo extra, se existir
+
+            dados.action = 'addformulario';
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(dados),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await res.json();
+                if (result.success) {
+                    alert('Formulário enviado com sucesso!');
+                    e.target.reset();
+                    mostrarOutroCampo(document.getElementById('transportadora')); // Esconde campo "Outro"
+                    // Não recarregue indicadores aqui se não estiver na aba de indicadores
+                } else {
+                    alert('Erro ao enviar formulário: ' + (result.message || 'Erro desconhecido.'));
+                }
+            } catch (error) {
+                console.error('Erro de rede ou API:', error);
+                alert('Ocorreu um erro ao conectar com o servidor.');
             }
         });
 
-        // --- Lógica para Cancelar o Modal de Senha do colaboradores ---
-        btnCancelarSenhacolaboradores.addEventListener('click', () => {
-            senhacolaboradoresModal.style.display = 'none'; // Fecha o modal de senha
-            senhaAddcolaboradoresInput.value = '';
-            mensagemSenhacolaboradores.textContent = '';
+        // --- Lógica do Modal Colaboradores ---
+        btnAddColaborador.addEventListener('click', () => {
+            senhaColaboradorModal.style.display = 'flex';
+            senhaAddColaboradorInput.value = '';
+            mensagemSenhaColaborador.textContent = '';
+            senhaAddColaboradorInput.focus();
         });
 
-        // --- Função para Abrir o Formulário de Adicionar colaboradores ---
-        function abrirModalcolaboradores(){
-            formcolaboradoresModal.style.display = 'flex'; // Torna o modal de formulário visível
-            formcolaboradores.reset(); // Limpa o formulário de funcionário
-        }
-
-        // --- Lógica para Cancelar o Formulário de Adicionar colaboradores---
-        btnCancelar.addEventListener('click', () => {
-            formcolaboradoresModal.style.display = 'none'; // Fecha o modal do formulário
+        btnVerificarSenhaColaborador.addEventListener('click', () => {
+            const senhaDigitada = senhaAddColaboradorInput.value;
+            if (senhaDigitada === SENHA_COLABORADORES) {
+                mensagemSenhaColaborador.textContent = '';
+                senhaColaboradorModal.style.display = 'none';
+                formColaboradorModal.style.display = 'flex';
+                document.getElementById('formAdicionarColaborador').reset();
+            } else {
+                mensagemSenhaColaborador.textContent = 'Senha incorreta.';
+                senhaAddColaboradorInput.value = '';
+            }
         });
 
-          // Adicionar colaborador
-    document.getElementById('formColaborador').onsubmit = async (e) => {
-      e.preventDefault();
-      const form = new FormData(e.target);
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const dados = {
-          action: 'addcolaborador',
-          nome: form.get('nome'),
-          cargo: form.get('cargo'),
-          turno: form.get('turno'),
-          foto: reader.result
-        };
-        await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify(dados),
-          headers: { 'Content-Type': 'application/json' }
-        });
-        alert('Colaborador cadastrado!');
-        e.target.reset();
-        carregarColaboradores();
-      };
-      reader.readAsDataURL(form.get('foto'));
-    };
-        const senhadialogos = "davidmend123"; // Senha definida
-const modaldialogos = document.getElementById("senhadialogosModal");
-const inputSenhadialogos = document.getElementById("senhadialogos");
-const btnVerificardialogos = document.getElementById("btn-verificar-senha-dialogos");
-const btnCancelardialogos = document.getElementById("btn-cancelar-senha-dialogos");
-const mensagemSenhadialogos = document.getElementById("mensagem-senha-dialogos");
-const formdialogos = document.getElementById("form-dialogos-foto");
-
-// Abrir modal ao clicar em "Salvar"
-document.getElementById("abrir-modal-dialogos").addEventListener("click", () => {
-  inputSenhadialogos.value = '';
-  mensagemSenhadialogos.textContent = '';
-  modaldialogos.style.display = "flex";
-  inputSenhadialogos.focus();
-});
-
-// Cancelar
-btnCancelardialogos.addEventListener("click", () => {
-  modaldialogos.style.display = "none";
-  inputSenhadialogos.value = '';
-  mensagemSenhadialogos.textContent = '';
-});
-
-// Verificar senha
-btnVerificardialogos.addEventListener("click", () => {
-  const senha = inputSenhadialogos.value;
-  if (senha === senhadialogos) {
-    modaldialogos.style.display = "none";
-    mensagemSenhadialogos.textContent = '';
-    enviardialogos();
-  } else {
-    mensagemSenhadialogos.textContent = "Senha incorreta!";
-    inputSenhadialogos.value = '';
-  }
-});
-
-   // Enviar foto do DDS
-    async function enviarFotodialogos() {
-      const input = document.getElementById('fotodialogos');
-      if (!input.files[0]) return alert('Selecione uma imagem.');
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'adddialogos',
-            foto: reader.result
-          }),
-          headers: { 'Content-Type': 'application/json' }
-        });
-        alert('Foto enviada!');
-        carregarFotosDSS();
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
-
-           // Carregar fotos DDS
-    async function carregarFotosDSS() {
-      const res = await fetch(`${API_URL}?action=getDialogos`);
-      const dados = await res.json();
-      document.getElementById('fotosDSS').innerHTML = dados.map(foto => `
-        <img src="${foto}" class="foto-dss" />
-      `).join('');
-    }
-
-         // Enviar formulário
-    document.getElementById('formulario').onsubmit = async (e) => {
-      e.preventDefault();
-      const form = new FormData(e.target);
-      const dados = Object.fromEntries(form);
-      dados.action = 'addformulario';
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify(dados),
-        headers: { 'Content-Type': 'application/json' }
-      });
-      alert('Formulário enviado!');
-      e.target.reset();
-      carregarIndicadores();
-    };
-
-
-        // Inicializa: o painel principal e o cabeçalho já estão visíveis no HTML.
-        // Apenas oculta o formulário de colaboradores inicialmente.
-        document.addEventListener('DOMContentLoaded', () => {
-            formformulario.style.display = 'block'; 
-            divcolaboradores.style.display = 'none'; 
+        btnCancelarSenhaColaborador.addEventListener('click', () => {
+            senhaColaboradorModal.style.display = 'none';
+            senhaAddColaboradorInput.value = '';
+            mensagemSenhaColaborador.textContent = '';
         });
 
-         // Carregar indicadores
-    async function carregarIndicadores() {
-      const res = await fetch(`${API_URL}?action=getIndicadores`);
-      const dados = await res.json();
-      const ctx = document.getElementById('graficoIndicadores').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: dados.labels,
-          datasets: [{
-            label: 'Qtd de Operações',
-            data: dados.valores,
-            backgroundColor: 'rgba(54, 162, 235, 0.5)'
-          }]
-        }
-      });
-    }
+        btnCancelarAddColaborador.addEventListener('click', () => {
+            formColaboradorModal.style.display = 'none';
+        });
 
-    carregarColaboradores();
-    carregarFotosDSS();
-    carregarIndicadores();
+        // Formulário de Adicionar Colaborador
+        document.getElementById('formAdicionarColaborador').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = new FormData(e.target);
+            const reader = new FileReader();
+
+            const fotoFile = form.get('fotoColaborador');
+            if (!fotoFile || fotoFile.size === 0) {
+                alert('Por favor, selecione uma imagem para a foto do colaborador.');
+                return;
+            }
+
+            reader.onloadend = async () => {
+                const dados = {
+                    action: 'addColaborador', // Corrigido para camelCase, conforme a sugestão do Google Script
+                    nome: form.get('nomeColaborador'),
+                    cargo: form.get('cargoColaborador'),
+                    turno: form.get('turnoColaborador'),
+                    foto: reader.result // Base64 da imagem
+                };
+                try {
+                    const res = await fetch(API_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(dados),
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                        alert('Colaborador cadastrado com sucesso!');
+                        e.target.reset();
+                        formColaboradorModal.style.display = 'none';
+                        carregarColaboradores(); // Atualiza a lista
+                    } else {
+                        alert('Erro ao cadastrar colaborador: ' + (result.message || 'Erro desconhecido.'));
+                    }
+                } catch (error) {
+                    console.error('Erro de rede ou API:', error);
+                    alert('Ocorreu um erro ao conectar com o servidor.');
+                }
+            };
+            reader.readAsDataURL(fotoFile);
+        });
+
+        // --- Lógica do Modal DDS (Diálogos de Segurança) ---
+        btnAbrirUploadDDS.addEventListener('click', () => {
+            senhaDDSModal.style.display = 'flex';
+            senhaDDSInput.value = '';
+            mensagemSenhaDDS.textContent = '';
+            senhaDDSInput.focus();
+        });
+
+        btnVerificarSenhaDDS.addEventListener('click', () => {
+            const senhaDigitada = senhaDDSInput.value;
+            if (senhaDigitada === SENHA_DDS) {
+                mensagemSenhaDDS.textContent = '';
+                senhaDDSModal.style.display = 'none';
+                formDialogosFoto.style.display = 'block'; // Mostra o formulário de upload
+                fotoDDSInput.value = ''; // Limpa o input file
+            } else {
+                mensagemSenhaDDS.textContent = 'Senha incorreta.';
+                senhaDDSInput.value = '';
+            }
+        });
+
+        btnCancelarSenhaDDS.addEventListener('click', () => {
+            senhaDDSModal.style.display = 'none';
+            senhaDDSInput.value = '';
+            mensagemSenhaDDS.textContent = '';
+        });
+
+        btnEnviarFotoDDS.addEventListener('click', async () => {
+            const input = document.getElementById('fotoDDS');
+            if (!input.files[0]) {
+                alert('Selecione uma imagem para enviar.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                try {
+                    const res = await fetch(API_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            action: 'addDialogos', // Corrigido para camelCase
+                            foto: reader.result
+                        }),
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                        alert('Foto DDS enviada com sucesso!');
+                        input.value = ''; // Limpa o input file
+                        formDialogosFoto.style.display = 'none'; // Esconde o formulário após o envio
+                        carregarFotosDDS(); // Recarrega as fotos para exibir a nova
+                    } else {
+                        alert('Erro ao enviar foto DDS: ' + (result.message || 'Erro desconhecido.'));
+                    }
+                } catch (error) {
+                    console.error('Erro de rede ou API ao enviar foto DDS:', error);
+                    alert('Ocorreu um erro ao conectar com o servidor.');
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+        });
     </script>
 </body>
 </html>

@@ -417,7 +417,7 @@
 
     <header class="topo">
         <img src="https://i.postimg.cc/15wPGs3w/logo-pizzattolog-removebg-preview.png" alt="Logo PIZZATTOLOG" class="logo" />
-        <div class="tabs">
+    <div class="tabs">
             <div class="tab active" data-tab="formulario">Formulário</div>
             <div class="tab" data-tab="colaboradores">Colaboradores</div>
             <div class="tab" data-tab="dialogos">Diálogos de Segurança</div>
@@ -687,11 +687,13 @@
                 activeTab.classList.add('active');
             }
 
-            // Mostra o conteúdo da aba clicada
-            const activeContent = document.getElementById(`${tabName}-content`);
-            if (activeContent) {
-                activeContent.classList.add('active');
-            }
+       // Conteúdos das abas
+        const formularioContent = document.getElementById('formulario-content');
+        const colaboradoresContent = document.getElementById('colaboradores-content');
+        const dialogosContent = document.getElementById('dialogos-seguranca-content');
+        const checklistContent = document.getElementById('checklist-content');
+        const indicadoresContent = document.getElementById('indicadores-content');
+        const descricaoContent = document.getElementById('descricao-content');
 
             // --- CONTROLE DE VISIBILIDADE DO BOTÃO FLUTUANTE ---
             if (tabName === 'colaboradores') {

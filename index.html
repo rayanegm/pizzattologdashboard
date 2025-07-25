@@ -143,8 +143,8 @@
             margin-top: 10px;
             display: none;
         }
-        /* Lista Funcionários */
-        #lista-funcionarios {
+        /* Lista colaboradores*/
+        #lista-colaboradores {
             background: #fff;
             padding: 30px;
             border-radius: 12px;
@@ -154,37 +154,37 @@
             display: none; /* Inicia escondido */
             min-height: 400px;
         }
-        .funcionario-card {
+        .colaboradores-card {
             display: flex;
             align-items: center;
             gap: 20px;
             padding: 15px;
             border-bottom: 1px solid #ddd;
         }
-        .funcionario-card:last-child {
+        .colaboradores-card:last-child {
             border-bottom: none;
         }
-        .funcionario-foto {
+        .colaboradores-foto {
             width: 60px;
             height: 60px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid #007bff;
         }
-        .funcionario-info {
+        .colaboradores-info {
             flex-grow: 1;
         }
-        .funcionario-nome {
+        .colaboradores-nome {
             font-weight: 700;
             font-size: 18px;
             margin-bottom: 5px;
         }
-        .funcionario-cargo,
-        .funcionario-turno {
+        .colaboradores-cargo,
+        .colaboradores-turno {
             font-size: 14px;
             color: #555;
         }
-        /* Modal Funcionário e Modal de Senha (geral para modais overlay) */
+        /* Modalcolaboradores e Modal de Senha (geral para modais overlay) */
         .modal-overlay {
             display: none; /* Todos os overlays de modal começam escondidos */
             position: fixed;
@@ -238,17 +238,23 @@
         }
     </style>
 </head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <body>
 
     <header class="topo"> <img src="https://i.postimg.cc/15wPGs3w/logo-pizzattolog-removebg-preview.png" alt="Logo PIZZATTOLOG" class="logo" />
-        <div class="tabs">
-            <div class="tab active" data-tab="operacoes">Operações</div>
-            <div class="tab" data-tab="funcionarios">Funcionários</div>
-        </div>
-    </header>
+  <img src="https://i.postimg.cc/15wPGs3w/logo-pizzattolog-removebg-preview.png" alt="Logo PIZZATTOLOG" class="logo" />
+  <div class="tabs">
+    <div class="tab active" data-tab="formulario">Formulário</div>
+    <div class="tab" data-tab="colaboradores">Colaboradores</div>
+    <div class="tab" data-tab="dialogos">Diálogos de Segurança</div>
+    <div class="tab" data-tab="descricao">Descrição Operacional</div>
+    <div class="tab" data-tab="checklist">Check List 5S</div>
+    <div class="tab" data-tab="indicadores">Indicadores Registro</div>
+  </div>
+</header>
 
     <main id="main-content"> <form id="formulario" action="#" method="post">
-            <h2>Painel de Operações</h2>
+            <h2>FORMULARIO</h2>
 
             <div class="form-grid">
                 <div class="coluna-esquerda">
@@ -320,55 +326,101 @@
             <button type="submit" id="btnEnviar">ENVIAR</button>
         </form>
 
-        <div id="lista-funcionarios">
-            <h2>Funcionários</h2>
-            <div id="funcionarios-lista"></div>
+        <div id="lista-colaboradores">
+            <h2>colaboradores</h2>
+            <div id="colaboradores-lista"></div>
 
-            <button id="btn-add-funcionario" style="margin-top: 20px; padding: 10px 15px; background: #007bff; color: white; border:none; border-radius: 8px; cursor:pointer;">
-                ➕ Adicionar Funcionário
+            <button id="btn-add-colaboradores" style="margin-top: 20px; padding: 10px 15px; background: #007bff; color: white; border:none; border-radius: 8px; cursor:pointer;">
+                ➕ Adicionar colaboradores
             </button>
         </div>
 
-        <div id="formFuncionarioModal" class="modal-overlay">
-            <form id="formFuncionario" class="modal-content"> 
-                <h2>Adicionar Funcionário</h2>
+        <div id="formcolaboradoresModal" class="modal-overlay">
+            <form id="formcolaboradores" class="modal-content"> 
+                <h2>Adicionar colaboradores</h2>
 
-                <label for="nomeFuncionario">Nome</label>
-                <input type="text" id="nomeFuncionario" required />
+                <label for="nomecolaboradores">Nome</label>
+                <input type="text" id="nomecolaboradores" required />
 
-                <label for="cargoFuncionario">Cargo</label>
-                <input type="text" id="cargoFuncionario" required />
+                <label for="cargocolaboradores">Cargo</label>
+                <input type="text" id="cargocolaboradores" required />
 
-                <label for="turnoFuncionario">Turno</label>
-                <select id="turnoFuncionario" name="turno" required>
+                <label for="turnocolaboradores">Turno</label>
+                <select id="turnocolaboradores" name="turno" required>
                     <option value="">Selecione</option>
                     <option value="1º Turno">1º Turno</option>
                     <option value="2º Turno">2º Turno</option>
                     <option value="3º Turno">3º Turno</option>
                 </select>
 
-                <label for="fotoFuncionario">Foto (PNG)</label>
-                <input type="file" id="fotoFuncionario" accept="image/png" required />
+                <label for="fotocolaboradores">Foto (PNG)</label>
+                <input type="file" id="fotocolaboradores" accept="image/png" required />
 
                 <button type="submit" style="background: #28a745; color: white;">Salvar</button>
                 <button type="button" id="btn-cancelar" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
             </form>
         </div>
 
-        <div id="senhaFuncionarioModal" class="modal-overlay">
+        <div id="senhacolaboradoresModal" class="modal-overlay">
             <div class="modal-content">
                 <h2>Autorização</h2>
-                <label for="senhaAddFuncionario">Digite a senha:</label>
-                <input type="password" id="senhaAddFuncionario" required />
-                <button id="btn-verificar-senha-funcionario" style="background: #007bff; color: white;">Verificar</button>
-                <button id="btn-cancelar-senha-funcionario" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
-                <p id="mensagem-senha-funcionario" class="modal-message"></p>
+                <label for="senhaAddcolaboradores">Digite a senha:</label>
+                <input type="password" id="senhaAddcolaboradores" required />
+                <button id="btn-verificar-senha-colaboradores" style="background: #007bff; color: white;">Verificar</button>
+                <button id="btn-cancelar-senha-colaboradores" style="background: #dc3545; color: white; margin-top: 10px;">Cancelar</button>
+                <p id="mensagem-senha-colaboradores" class="modal-message"></p>
             </div>
         </div>
+
+    <script>
+  function mostrarSenha() {
+    document.getElementById('senhaContainer').style.display = 'block';
+  }
+
+  async function enviarFotoDSS() {
+    const senha = document.getElementById('senha').value;
+    if (senha !== 'suaSenha123') {
+      alert('Senha incorreta!');
+      return;
+    }
+
+    const input = document.getElementById('fotoDSS');
+    if (!input.files[0]) {
+      alert('Selecione uma imagem.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'addDSS',
+          foto: reader.result
+        }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      alert('Foto enviada!');
+      document.getElementById('senha').value = '';
+      document.getElementById('senhaContainer').style.display = 'none';
+      carregarFotosDSS();
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+</script>
+
+
+  <!-- INDICADORES -->
+  <section>
+    <h2>Indicadores</h2>
+    <canvas id="graficoIndicadores" width="400" height="200"></canvas>
+  </section>
+
     </main>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbxZVeqWjMdx1yo5QgvcpO9-1iBbBSVm7X0GLdDrQhZyJuYbnxfX0gDFG13RH58CNdvn8w/exec"; 
+
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzqIZhmRvaVowC-aVuaXqWIgXSa3ooWBoLL3EQLjYWMeDPmsgryG0i-6sjBdGRpCltXvA/exec';
 
         // --- Elementos do Painel (agora visíveis por padrão) ---
         const mainContent = document.getElementById('main-content');
@@ -377,21 +429,36 @@
         // --- Elementos do Modal de Adicionar Funcionário ---
         const tabs = document.querySelectorAll('.tab');
         const formOperacoes = document.getElementById('formulario');
-        const divFuncionarios = document.getElementById('lista-funcionarios');
-        const listaFuncionariosDiv = document.getElementById('funcionarios-lista');
-        const btnAddFuncionario = document.getElementById('btn-add-funcionario');
-        const formFuncionarioModal = document.getElementById('formFuncionarioModal'); 
-        const formFuncionario = document.getElementById('formFuncionario');
+        const divcolaboradores = document.getElementById('lista-colaboradores');
+        const listacolaboradoresDiv = document.getElementById('colaboradores-lista');
+        const btnAddcolaboradores = document.getElementById('btn-add-colaboradores');
+        const formcolaboradoresModal = document.getElementById('formcolaboradoresModal'); 
+        const formcolaboradores = document.getElementById('formcolaboradores');
         const btnCancelar = document.getElementById('btn-cancelar');
 
-        // --- Elementos do Modal de Senha para Adicionar Funcionário ---
-        const senhaFuncionarioModal = document.getElementById('senhaFuncionarioModal');
-        const senhaAddFuncionarioInput = document.getElementById('senhaAddFuncionario');
-        const btnVerificarSenhaFuncionario = document.getElementById('btn-verificar-senha-funcionario');
-        const btnCancelarSenhaFuncionario = document.getElementById('btn-cancelar-senha-funcionario');
-        const mensagemSenhaFuncionario = document.getElementById('mensagem-senha-funcionario');
+        // --- Elementos do Modal de Senha para Adicionar colaboradores ---
+        const senhacolaboradoresModal = document.getElementById('senhacolaboradoresModal');
+        const senhaAddcolaboradoresInput = document.getElementById('senhaAddcolaboradores');
+        const btnVerificarSenhacolaboradores = document.getElementById('btn-verificar-senha-colaboradores');
+        const btnCancelarSenhacolaboradores = document.getElementById('btn-cancelar-senha-colaboradores');
+        const mensagemSenhacolaboradores = document.getElementById('mensagem-senha-colaboradores');
 
-        const SENHA_CORRETA_ADD_FUNCIONARIO = "davidmend123"; // Senha específica para o modal de adicionar funcionário
+        const SENHA_CORRETA_ADD_COLABORADORES = "davidmend123"; // Senha específica para o modal de adicionar colaboradores
+
+        <!-- Modal de Senha DDS -->
+<div id="senhaDSSModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+  background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000;">
+  <div style="background: white; padding: 20px 30px; border-radius: 10px; width: 300px; text-align: center; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+    <h3>Digite a Senha</h3>
+    <input type="password" id="senhaDSS" style="width: 100%; padding: 10px; margin-top: 10px;" placeholder="Senha..." />
+    <div style="margin-top: 15px;">
+      <button id="btn-verificar-senha-dss" style="margin-right: 10px; padding: 8px 12px;">Confirmar</button>
+      <button id="btn-cancelar-senha-dss" style="padding: 8px 12px;">Cancelar</button>
+    </div>
+    <p id="mensagem-senha-dss" style="color: red; margin-top: 10px;"></p>
+  </div>
+</div>
+
 
         function mostrarOutroCampo(select) {
             const campoOutro = document.getElementById('campoOutro');
@@ -404,226 +471,222 @@
             }
         }
 
-        // --- Lógica para Alternar Abas (Operações / Funcionários) ---
+        // --- Lógica para Alternar Abas (formulario/colaboradores) ---
         tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                if (tab.dataset.tab === 'operacoes') {
-                    formOperacoes.style.display = 'block';
-                    divFuncionarios.style.display = 'none';
-                } else {
-                    formOperacoes.style.display = 'none';
-                    divFuncionarios.style.display = 'block';
-                    carregarFuncionarios(); // Chama a função ao mudar para a aba de funcionários
-                }
-            });
-        });
+    tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
 
-        // --- Função para Carregar Funcionários (AGORA CORRIGIDA PARA POST) ---
-        async function carregarFuncionarios(){
-            try {
-                // Prepara os dados para o POST, incluindo a ação
-                const formData = {
-                    action: 'getFuncionarios',
-                    sheet: 'Funcionarios'
-                };
+        const aba = tab.dataset.tab;
 
-                const res = await fetch(scriptURL, { // scriptURL sem parâmetros na URL
-                    method: 'POST', // Mudei para POST
-                    headers: {
-                        'Content-Type': 'application/json' // Indique que o corpo é JSON
-                    },
-                    body: JSON.stringify(formData) // Envia os dados como JSON no corpo
-                });
+        // Oculta todos os conteúdos
+        formOperacoes.style.display = 'none';
+        divFuncionarios.style.display = 'none';
+        mainContent.innerHTML = ''; // Limpa o conteúdo atual
 
-                if(!res.ok) throw new Error('Erro ao buscar funcionários: ' + res.statusText);
-                const data = await res.json();
-
-                listaFuncionariosDiv.innerHTML = ''; // Limpa a lista antes de preencher
-
-                if(data.length === 0){
-                    listaFuncionariosDiv.innerHTML = '<p>Nenhum funcionário cadastrado.</p>';
-                    return;
-                }
-
-                data.forEach(f => {
-                    const card = document.createElement('div');
-                    card.classList.add('funcionario-card');
-                    card.setAttribute('data-turno', f.turno);
-                    card.innerHTML = `
-                        <img src="${f.foto || 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png'}" alt="${f.nome}" class="funcionario-foto" />
-                        <div class="funcionario-info">
-                            <div class="funcionario-nome">${f.nome}</div>
-                            <div class="funcionario-cargo">${f.cargo}</div>
-                            <div class="funcionario-turno">${f.turno}</div>
-                        </div>
-                    `;
-                    listaFuncionariosDiv.appendChild(card);
-                });
-            } catch (error) {
-                listaFuncionariosDiv.innerHTML = `<p>Erro ao carregar funcionários: ${error.message}</p>`;
-                console.error("Erro em carregarFuncionarios:", error); // Adicionado para depuração
-            }
+        if (aba === 'formulario') {
+            formOperacoes.style.display = 'block';
+        } else if (aba === 'colaboradores') {
+            divFuncionarios.style.display = 'block';
+            carregarFuncionarios();
+        } else {
+            // Conteúdo fictício para abas novas
+            mainContent.innerHTML = `<div style="padding: 40px; background: white; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); min-height: 400px;">
+                <h2>${tab.textContent}</h2>
+                <p>Conteúdo de "${tab.textContent}" em construção...</p>
+            </div>`;
         }
+    });
+});
 
-        // --- Lógica do Botão "Adicionar Funcionário" (agora mostra o modal de senha) ---
-        btnAddFuncionario.addEventListener('click', () => {
-            senhaFuncionarioModal.style.display = 'flex'; // Abre o modal de senha
-            senhaAddFuncionarioInput.value = ''; // Limpa o campo de senha
-            mensagemSenhaFuncionario.textContent = ''; // Limpa a mensagem de erro
-            senhaAddFuncionarioInput.focus();
+
+         // Carregar colaboradores
+    async function carregarColaboradores() {
+      const res = await fetch(`${API_URL}?action=getcolaboradores`);
+      const dados = await res.json();
+      const lista = document.getElementById('listaColaboradores');
+      lista.innerHTML = dados.map(p => `
+        <div class="colaborador">
+          <img src="${p.foto}" />
+          <div><strong>${p.nome}</strong></div>
+          <div>${p.turno}</div>
+        </div>
+      `).join('');
+    }
+
+        // --- Lógica do Botão "Adicionar colaboradores" (agora mostra o modal de senha) ---
+        btnAddcolaboradores.addEventListener('click', () => {
+            senhacolaboradoresModal.style.display = 'flex'; // Abre o modal de senha
+            senhaAddcolaboradoresInput.value = ''; // Limpa o campo de senha
+            mensagemSenhacolaboradores.textContent = ''; // Limpa a mensagem de erro
+            senhaAddcolaboradoresInput.focus();
         });
 
-        // --- Lógica para Verificar a Senha do Modal "Adicionar Funcionário" ---
-        btnVerificarSenhaFuncionario.addEventListener('click', () => {
-            const senhaDigitada = senhaAddFuncionarioInput.value;
-            if (senhaDigitada === SENHA_CORRETA_ADD_FUNCIONARIO) { 
-                mensagemSenhaFuncionario.textContent = '';
-                senhaFuncionarioModal.style.display = 'none'; // Fecha o modal de senha
-                abrirModalFuncionario(); // Abre o modal de adicionar funcionário
+        // --- Lógica para Verificar a Senha do Modal "Adicionar colaboradores" ---
+        btnVerificarSenhacolaboradores.addEventListener('click', () => {
+            const senhaDigitada = senhaAddcolaboradoresInput.value;
+            if (senhaDigitada === SENHA_CORRETA_ADD_COLABORADORES) { 
+                mensagemSenhacolaboradores.textContent = '';
+                senhacolaboradoresModal.style.display = 'none'; // Fecha o modal de senha
+                abrirModalcolaboradores(); // Abre o modal de adicionar colaboradores
             } else {
-                mensagemSenhaFuncionario.textContent = 'Senha incorreta.';
-                senhaAddFuncionarioInput.value = ''; 
+                mensagemSenhacolaboradores.textContent = 'Senha incorreta.';
+                senhaAddcolaboradoresInput.value = ''; 
             }
         });
 
-        // --- Lógica para Cancelar o Modal de Senha do Funcionário ---
-        btnCancelarSenhaFuncionario.addEventListener('click', () => {
-            senhaFuncionarioModal.style.display = 'none'; // Fecha o modal de senha
-            senhaAddFuncionarioInput.value = '';
-            mensagemSenhaFuncionario.textContent = '';
+        // --- Lógica para Cancelar o Modal de Senha do colaboradores ---
+        btnCancelarSenhacolaboradores.addEventListener('click', () => {
+            senhacolaboradoresModal.style.display = 'none'; // Fecha o modal de senha
+            senhaAddcolaboradoresInput.value = '';
+            mensagemSenhacolaboradores.textContent = '';
         });
 
-        // --- Função para Abrir o Formulário de Adicionar Funcionário ---
-        function abrirModalFuncionario(){
-            formFuncionarioModal.style.display = 'flex'; // Torna o modal de formulário visível
-            formFuncionario.reset(); // Limpa o formulário de funcionário
+        // --- Função para Abrir o Formulário de Adicionar colaboradores ---
+        function abrirModalcolaboradores(){
+            formcolaboradoresModal.style.display = 'flex'; // Torna o modal de formulário visível
+            formcolaboradores.reset(); // Limpa o formulário de funcionário
         }
 
-        // --- Lógica para Cancelar o Formulário de Adicionar Funcionário ---
+        // --- Lógica para Cancelar o Formulário de Adicionar colaboradores---
         btnCancelar.addEventListener('click', () => {
-            formFuncionarioModal.style.display = 'none'; // Fecha o modal do formulário
+            formcolaboradoresModal.style.display = 'none'; // Fecha o modal do formulário
         });
 
-        // --- Lógica para Salvar Funcionário no Google Sheets ---
-        formFuncionario.addEventListener('submit', async e => {
-            e.preventDefault();
-
-            const nome = document.getElementById('nomeFuncionario').value.trim();
-            const cargo = document.getElementById('cargoFuncionario').value.trim();
-            const turno = document.getElementById('turnoFuncionario').value; 
-            const fotoInput = document.getElementById('fotoFuncionario');
-
-            if(!nome || !cargo || !turno || fotoInput.files.length === 0){
-                alert('Por favor, preencha todos os campos e selecione uma foto PNG.');
-                return;
-            }
-
-            const file = fotoInput.files[0];
-            if(!file || file.type !== 'image/png'){
-                alert('Por favor, selecione uma imagem PNG válida.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = async function(){
-                const base64 = reader.result;
-
-                const formData = {
-                    action: 'addFuncionario',
-                    sheet: 'Funcionarios',
-                    nome: nome,
-                    cargo: cargo,
-                    turno: turno,
-                    foto: base64
-                };
-
-                try {
-                    const res = await fetch(scriptURL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(formData)
-                    });
-                    if(!res.ok) throw new Error('Erro ao enviar funcionário: ' + res.statusText);
-                    const json = await res.json();
-                    if(json.status === 'success'){
-                        alert('Funcionário adicionado com sucesso!');
-                        formFuncionarioModal.style.display = 'none'; // Fecha o modal do formulário
-                        carregarFuncionarios(); // Recarrega a lista
-                    } else {
-                        throw new Error(json.message || 'Erro desconhecido');
-                    }
-                } catch (error) {
-                    alert('Erro: ' + error.message);
-                    console.error("Erro ao adicionar funcionário:", error); // Adicionado para depuração
-                }
-            };
-            reader.readAsDataURL(file);
+          // Adicionar colaborador
+    document.getElementById('formColaborador').onsubmit = async (e) => {
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const dados = {
+          action: 'addcolaborador',
+          nome: form.get('nome'),
+          cargo: form.get('cargo'),
+          turno: form.get('turno'),
+          foto: reader.result
+        };
+        await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify(dados),
+          headers: { 'Content-Type': 'application/json' }
         });
+        alert('Colaborador cadastrado!');
+        e.target.reset();
+        carregarColaboradores();
+      };
+      reader.readAsDataURL(form.get('foto'));
+    };
+        const senhadialogos = "davidmend123"; // Senha definida
+const modaldialogos = document.getElementById("senhadialogosModal");
+const inputSenhadialogos = document.getElementById("senhadialogos");
+const btnVerificardialogos = document.getElementById("btn-verificar-senha-dialogos");
+const btnCancelardialogos = document.getElementById("btn-cancelar-senha-dialogos");
+const mensagemSenhadialogos = document.getElementById("mensagem-senha-dialogos");
+const formdialogos = document.getElementById("form-dialogos-foto");
 
-        // --- Envio formulário Operações (mantido do código anterior) ---
-        formOperacoes.addEventListener('submit', async e => {
-            e.preventDefault();
+// Abrir modal ao clicar em "Salvar"
+document.getElementById("abrir-modal-dialogos").addEventListener("click", () => {
+  inputSenhadialogos.value = '';
+  mensagemSenhadialogos.textContent = '';
+  modaldialogos.style.display = "flex";
+  inputSenhadialogos.focus();
+});
 
-            const select = document.getElementById('transportadora');
-            const inputOutro = document.getElementById('outraTransportadora');
+// Cancelar
+btnCancelardialogos.addEventListener("click", () => {
+  modaldialogos.style.display = "none";
+  inputSenhadialogos.value = '';
+  mensagemSenhadialogos.textContent = '';
+});
 
-            if(select.value === 'outro' && inputOutro.value.trim() === ''){
-                alert('Por favor, preencha o nome da transportadora.');
-                inputOutro.focus();
-                return;
-            }
+// Verificar senha
+btnVerificardialogos.addEventListener("click", () => {
+  const senha = inputSenhadialogos.value;
+  if (senha === senhadialogos) {
+    modaldialogos.style.display = "none";
+    mensagemSenhadialogos.textContent = '';
+    enviardialogos();
+  } else {
+    mensagemSenhadialogos.textContent = "Senha incorreta!";
+    inputSenhadialogos.value = '';
+  }
+});
 
-            const btnEnviar = document.getElementById('btnEnviar');
-            btnEnviar.textContent = 'Enviando...';
-            btnEnviar.disabled = true;
-
-            const data = {
-                action: 'addOperacao',
-                cte: formOperacoes.cte.value,
-                destino_origem: formOperacoes.destino_origem.value,
-                placa: formOperacoes.placa.value,
-                transportadora: select.value === 'outro' ? inputOutro.value.trim() : select.value,
-                pallets: formOperacoes.pallets.value,
-                carga_descarga: formOperacoes.carga_descarga.value,
-                agendamento: formOperacoes.agendamento.value,
-                chegada: formOperacoes.chegada.value,
-                inicio: formOperacoes.inicio.value,
-                termino: formOperacoes.termino.value,
-                turno: "N/A"
-            };
-
-            try {
-                const res = await fetch(scriptURL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                if(!res.ok) throw new Error('Erro no envio dos dados: ' + res.statusText);
-                const json = await res.json();
-                if(json.status === 'success'){
-                    alert('Dados enviados com sucesso!');
-                    formOperacoes.reset();
-                    document.getElementById('campoOutro').style.display = 'none';
-                } else {
-                    throw new Error(json.message || 'Erro desconhecido');
-                }
-            } catch (error) {
-                alert('Erro ao enviar dados: ' + error.message);
-                console.error("Erro ao enviar operações:", error); // Adicionado para depuração
-            } finally {
-                btnEnviar.textContent = 'ENVIAR';
-                btnEnviar.disabled = false;
-            }
+   // Enviar foto do DDS
+    async function enviarFotodialogos() {
+      const input = document.getElementById('fotodialogos');
+      if (!input.files[0]) return alert('Selecione uma imagem.');
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'adddialogos',
+            foto: reader.result
+          }),
+          headers: { 'Content-Type': 'application/json' }
         });
+        alert('Foto enviada!');
+        carregarFotosDSS();
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+
+           // Carregar fotos DDS
+    async function carregarFotosDSS() {
+      const res = await fetch(`${API_URL}?action=getDialogos`);
+      const dados = await res.json();
+      document.getElementById('fotosDSS').innerHTML = dados.map(foto => `
+        <img src="${foto}" class="foto-dss" />
+      `).join('');
+    }
+
+         // Enviar formulário
+    document.getElementById('formulario').onsubmit = async (e) => {
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const dados = Object.fromEntries(form);
+      dados.action = 'addformulario';
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify(dados),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      alert('Formulário enviado!');
+      e.target.reset();
+      carregarIndicadores();
+    };
+
 
         // Inicializa: o painel principal e o cabeçalho já estão visíveis no HTML.
-        // Apenas oculta o formulário de funcionários inicialmente.
+        // Apenas oculta o formulário de colaboradores inicialmente.
         document.addEventListener('DOMContentLoaded', () => {
-            formOperacoes.style.display = 'block'; 
-            divFuncionarios.style.display = 'none'; 
+            formformulario.style.display = 'block'; 
+            divcolaboradores.style.display = 'none'; 
         });
+
+         // Carregar indicadores
+    async function carregarIndicadores() {
+      const res = await fetch(`${API_URL}?action=getIndicadores`);
+      const dados = await res.json();
+      const ctx = document.getElementById('graficoIndicadores').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: dados.labels,
+          datasets: [{
+            label: 'Qtd de Operações',
+            data: dados.valores,
+            backgroundColor: 'rgba(54, 162, 235, 0.5)'
+          }]
+        }
+      });
+    }
+
+    carregarColaboradores();
+    carregarFotosDSS();
+    carregarIndicadores();
     </script>
 </body>
 </html>

@@ -39,14 +39,14 @@
             height: auto;
             cursor: pointer;
         }
-      .tabs {
-  gap: 6px; /* menos espaço entre abas */
-}
+        .tabs {
+            gap: 6px; /* menos espaço entre abas */
+        }
         .tab {
             flex: 1;
             background: rgba(0,123,255,0.15);
             color: #004085;
-            padding: 6px 12px;  /* menor padding */
+            padding: 6px 12px; /* menor padding */
             text-align: center;
             border-radius: 10px;
             cursor: pointer;
@@ -55,8 +55,8 @@
             user-select: none;
             position: relative;     
             font-size: 13px;    /* texto um pouco menor */
-             min-width: 80px;    /* largura mínima menor */
-           border-radius: 6px; /* borda um pouco mais arredondada */
+            min-width: 80px;    /* largura mínima menor */
+            border-radius: 6px; /* borda um pouco mais arredondada */
         }
         .tab:hover {
             background-color: rgba(0,123,255,0.35);
@@ -93,14 +93,14 @@
             align-items: center; /* Centraliza o conteúdo das abas */
             justify-content: flex-start; /* Alinha o conteúdo das abas no topo */
         }
-   .tab-content {
-    background: transparent; /* Fundo transparente */
-    padding: 40px;           /* Mantém o espaçamento interno */
-    border-radius: 12px;     /* Pode manter para cantos arredondados */
-    box-shadow: none;        /* Remove sombra para não interferir */
-    width: 100%;
-    display: none;           /* continua escondido por padrão */
-}
+        .tab-content {
+            background: transparent; /* Fundo transparente */
+            padding: 40px;             /* Mantém o espaçamento interno */
+            border-radius: 12px;       /* Pode manter para cantos arredondados */
+            box-shadow: none;          /* Remove sombra para não interferir */
+            width: 100%;
+            display: none;             /* continua escondido por padrão */
+        }
         .tab-content.active {
             display: block; /* Mostra o conteúdo ativo */
         }
@@ -170,6 +170,7 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
             display: none; /* Inicia escondido, controlado pelo JS */
             min-height: 400px;
+            position: relative; /* Para posicionar o botão adicionar relativo a ele se não for flutuante */
         }
         .colaboradores-card {
             display: flex;
@@ -289,6 +290,38 @@
             height: 400px; /* Altura fixa para o gráfico */
             margin-top: 20px;
         }
+
+        /* --- NOVO CSS PARA O BOTÃO FLUTUANTE --- */
+        .fab-button {
+            position: fixed; /* Fixa na tela */
+            bottom: 30px;    /* 30px do fundo */
+            right: 30px;     /* 30px da direita */
+            background-color: #007bff; /* Cor azul do seu tema */
+            color: white;
+            border: none;
+            border-radius: 50%; /* Faz o botão ser redondo */
+            width: 60px;     /* Largura */
+            height: 60px;    /* Altura */
+            font-size: 30px; /* Tamanho do '+' */
+            display: flex; /* Para centralizar o '+' */
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25); /* Sombra para destacá-lo */
+            z-index: 1000;   /* Garante que fique acima de outros elementos */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .fab-button:hover {
+            background-color: #0056b3; /* Cor mais escura ao passar o mouse */
+            transform: translateY(-3px); /* Efeito de "subir" um pouco */
+        }
+
+        /* Esconder o botão "Adicionar Colaborador" original se ele ainda existir */
+        #colaboradores-content #btn-add-colaborador {
+            display: none;
+        }
+        /* --- FIM DO NOVO CSS --- */
 
         /* Responsividade */
         @media (max-width: 768px) {
@@ -421,15 +454,12 @@
         <div id="colaboradores-content" class="tab-content">
             <h2>COLABORADORES</h2>
             <div id="colaboradores-lista"></div>
-            <button id="btn-add-colaborador" style="margin-top: 20px; padding: 10px 15px; background: #007bff; color: white; border:none; border-radius: 8px; cursor:pointer;">
-                ➕ Adicionar Colaborador
-            </button>
-        </div>
+            </div>
 
         <div id="dialogos-seguranca-content" class="tab-content">
             <h2>DIÁLOGOS DE SEGURANÇA</h2>
             <div id="fotosDSS">
-                </div>
+            </div>
             <form id="form-dialogos-foto" style="display: none;"> <label for="fotoDDS">Upload de Foto DDS (PNG)</label>
                 <input type="file" id="fotoDDS" accept="image/png" required />
                 <button type="button" id="btn-enviar-foto-dds">Enviar Foto DDS</button>
@@ -442,7 +472,7 @@
         <div id="checklist-content" class="tab-content">
             <h2>CHECK LIST</h2>
             <p>Conteúdo da aba "Check List" em construção...</p>
-            </div>
+        </div>
 
         <div id="indicadores-content" class="tab-content">
             <h2>INDICADORES DE REGISTRO</h2>
@@ -452,9 +482,13 @@
         <div id="descricao-content" class="tab-content">
             <h2>DESCRIÇÃO OPERACIONAL</h2>
             <p>Conteúdo da aba "Descrição Operacional" em construção...</p>
-            </div>
+        </div>
 
     </main>
+
+    <button id="fab-add-colaborador" class="fab-button" title="Adicionar Novo Colaborador">
+        +
+    </button>
 
     <div id="formColaboradorModal" class="modal-overlay">
         <form id="formAdicionarColaborador" class="modal-content">
@@ -526,7 +560,8 @@
         const senhaColaboradorModal = document.getElementById('senhaColaboradorModal');
         const senhaDDSModal = document.getElementById('senhaDDSModal');
 
-        const btnAddColaborador = document.getElementById('btn-add-colaborador');
+        // Botões e inputs
+        const fabAddColaborador = document.getElementById('fab-add-colaborador'); // Novo ID para o botão flutuante
         const btnCancelarAddColaborador = document.getElementById('btn-cancelar-add-colaborador');
         const senhaAddColaboradorInput = document.getElementById('senhaAddColaborador');
         const btnVerificarSenhaColaborador = document.getElementById('btn-verificar-senha-colaborador');
@@ -568,6 +603,14 @@
             // Mostra o conteúdo da aba clicada
             const activeContent = document.getElementById(`${tabName}-content`);
             if (activeContent) activeContent.classList.add('active');
+
+            // --- CONTROLE DE VISIBILIDADE DO BOTÃO FLUTUANTE ---
+            if (tabName === 'colaboradores') {
+                fabAddColaborador.style.display = 'flex'; // Mostra o botão flutuante
+            } else {
+                fabAddColaborador.style.display = 'none'; // Esconde o botão flutuante em outras abas
+            }
+            // ----------------------------------------------------
 
             // Chamadas específicas para carregar dados/inicializar
             if (tabName === 'colaboradores') {
@@ -729,7 +772,7 @@
         });
 
         // --- Lógica do Modal Colaboradores ---
-        btnAddColaborador.addEventListener('click', () => {
+        fabAddColaborador.addEventListener('click', () => { // Usando o novo botão flutuante
             senhaColaboradorModal.style.display = 'flex';
             senhaAddColaboradorInput.value = '';
             mensagemSenhaColaborador.textContent = '';
@@ -743,6 +786,7 @@
                 senhaColaboradorModal.style.display = 'none';
                 formColaboradorModal.style.display = 'flex';
                 document.getElementById('formAdicionarColaborador').reset();
+                document.getElementById('fotoColaborador').value = ''; // Limpa o campo de arquivo
             } else {
                 mensagemSenhaColaborador.textContent = 'Senha incorreta.';
                 senhaAddColaboradorInput.value = '';
@@ -757,28 +801,40 @@
 
         btnCancelarAddColaborador.addEventListener('click', () => {
             formColaboradorModal.style.display = 'none';
+            document.getElementById('formAdicionarColaborador').reset();
+            document.getElementById('fotoColaborador').value = ''; // Limpa o campo de arquivo
         });
 
-        // Formulário de Adicionar Colaborador
+        // --- Lógica de Envio do Formulário de Adicionar Colaborador ---
         document.getElementById('formAdicionarColaborador').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const form = new FormData(e.target);
-            const reader = new FileReader();
 
-            const fotoFile = form.get('fotoColaborador');
-            if (!fotoFile || fotoFile.size === 0) {
-                alert('Por favor, selecione uma imagem para a foto do colaborador.');
+            const nome = document.getElementById('nomeColaborador').value;
+            const cargo = document.getElementById('cargoColaborador').value;
+            const turno = document.getElementById('turnoColaborador').value;
+            const fotoInput = document.getElementById('fotoColaborador');
+            const fotoFile = fotoInput.files[0];
+
+            if (!nome || !cargo || !turno || !fotoFile) {
+                alert('Por favor, preencha todos os campos e selecione uma foto.');
                 return;
             }
 
-            reader.onloadend = async () => {
+            // Leitura da foto como Base64
+            const reader = new FileReader();
+            reader.readAsDataURL(fotoFile);
+
+            reader.onload = async () => {
+                const fotoBase64 = reader.result; // String Base64 da imagem
+
                 const dados = {
-                    action: 'addColaborador', // Corrigido para camelCase, conforme a sugestão do Google Script
-                    nome: form.get('nomeColaborador'),
-                    cargo: form.get('cargoColaborador'),
-                    turno: form.get('turnoColaborador'),
-                    foto: reader.result // Base64 da imagem
+                    action: 'addColaborador',
+                    nome: nome,
+                    cargo: cargo,
+                    turno: turno,
+                    foto: fotoBase64
                 };
+
                 try {
                     const res = await fetch(API_URL, {
                         method: 'POST',
@@ -787,22 +843,27 @@
                     });
                     const result = await res.json();
                     if (result.success) {
-                        alert('Colaborador cadastrado com sucesso!');
-                        e.target.reset();
-                        formColaboradorModal.style.display = 'none';
-                        carregarColaboradores(); // Atualiza a lista
+                        alert('Colaborador adicionado com sucesso!');
+                        formColaboradorModal.style.display = 'none'; // Esconde o modal
+                        document.getElementById('formAdicionarColaborador').reset(); // Limpa o formulário
+                        fotoInput.value = ''; // Limpa o input de arquivo
+                        carregarColaboradores(); // Recarrega a lista de colaboradores
                     } else {
-                        alert('Erro ao cadastrar colaborador: ' + (result.message || 'Erro desconhecido.'));
+                        alert('Erro ao adicionar colaborador: ' + (result.message || 'Erro desconhecido.'));
                     }
                 } catch (error) {
-                    console.error('Erro de rede ou API:', error);
-                    alert('Ocorreu um erro ao conectar com o servidor.');
+                    console.error('Erro de rede ou API ao adicionar colaborador:', error);
+                    alert('Ocorreu um erro ao conectar com o servidor para adicionar o colaborador.');
                 }
             };
-            reader.readAsDataURL(fotoFile);
+
+            reader.onerror = (error) => {
+                console.error('Erro ao ler o arquivo de imagem:', error);
+                alert('Erro ao carregar a foto.');
+            };
         });
 
-        // --- Lógica do Modal DDS (Diálogos de Segurança) ---
+        // --- Lógica do Modal DDS (já existente, apenas para referência) ---
         btnAbrirUploadDDS.addEventListener('click', () => {
             senhaDDSModal.style.display = 'flex';
             senhaDDSInput.value = '';
@@ -815,8 +876,8 @@
             if (senhaDigitada === SENHA_DDS) {
                 mensagemSenhaDDS.textContent = '';
                 senhaDDSModal.style.display = 'none';
-                formDialogosFoto.style.display = 'block'; // Mostra o formulário de upload
-                fotoDDSInput.value = ''; // Limpa o input file
+                formDialogosFoto.style.display = 'block';
+                fotoDDSInput.value = ''; // Limpa o campo de arquivo
             } else {
                 mensagemSenhaDDS.textContent = 'Senha incorreta.';
                 senhaDDSInput.value = '';
@@ -830,39 +891,50 @@
         });
 
         btnEnviarFotoDDS.addEventListener('click', async () => {
-            const input = document.getElementById('fotoDDS');
-            if (!input.files[0]) {
-                alert('Selecione uma imagem para enviar.');
+            const fotoDDSFile = document.getElementById('fotoDDS').files[0];
+            if (!fotoDDSFile) {
+                alert('Por favor, selecione uma foto PNG para enviar.');
                 return;
             }
 
             const reader = new FileReader();
-            reader.onloadend = async () => {
+            reader.readAsDataURL(fotoDDSFile);
+
+            reader.onload = async () => {
+                const fotoBase64 = reader.result;
+
+                const dados = {
+                    action: 'addDialogo',
+                    foto: fotoBase64
+                };
+
                 try {
                     const res = await fetch(API_URL, {
                         method: 'POST',
-                        body: JSON.stringify({
-                            action: 'addDialogos', // Corrigido para camelCase
-                            foto: reader.result
-                        }),
+                        body: JSON.stringify(dados),
                         headers: { 'Content-Type': 'application/json' }
                     });
                     const result = await res.json();
                     if (result.success) {
                         alert('Foto DDS enviada com sucesso!');
-                        input.value = ''; // Limpa o input file
-                        formDialogosFoto.style.display = 'none'; // Esconde o formulário após o envio
-                        carregarFotosDDS(); // Recarrega as fotos para exibir a nova
+                        formDialogosFoto.style.display = 'none';
+                        fotoDDSInput.value = '';
+                        carregarFotosDDS(); // Recarrega as fotos de DDS
                     } else {
                         alert('Erro ao enviar foto DDS: ' + (result.message || 'Erro desconhecido.'));
                     }
                 } catch (error) {
                     console.error('Erro de rede ou API ao enviar foto DDS:', error);
-                    alert('Ocorreu um erro ao conectar com o servidor.');
+                    alert('Ocorreu um erro ao conectar com o servidor para enviar a foto DDS.');
                 }
             };
-            reader.readAsDataURL(input.files[0]);
+
+            reader.onerror = (error) => {
+                console.error('Erro ao ler o arquivo de imagem DDS:', error);
+                alert('Erro ao carregar a foto DDS.');
+            };
         });
+
     </script>
 </body>
 </html>

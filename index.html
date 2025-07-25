@@ -39,25 +39,33 @@
             height: auto;
             cursor: pointer;
         }
+        /* --- Alterações aqui para as abas uma ao lado da outra --- */
         .tabs {
-            gap: 6px; /* menos espaço entre abas */
+            display: flex; /* Adicionado: Ativa o Flexbox para alinhar horizontalmente */
+            flex-wrap: nowrap; /* Impede que as abas quebrem para a próxima linha */
+            gap: 10px; /* Aumentado um pouco o espaçamento entre as abas */
+            overflow-x: auto; /* Adicionado: Habilita scroll horizontal se as abas excederem a largura */
+            -webkit-overflow-scrolling: touch; /* Melhora o scroll em dispositivos iOS */
+            padding-bottom: 5px; /* Adicionado: Para dar espaço para a barra de rolagem se aparecer */
         }
         .tab {
-            flex: 1;
+            flex-shrink: 0; /* Impede que as abas encolham */
             background: rgba(0,123,255,0.15);
             color: #004085;
-            padding: 6px 12px; /* menor padding */
+            padding: 8px 15px; /* Ajustado um pouco o padding para melhor visualização */
             text-align: center;
-            border-radius: 10px;
+            border-radius: 8px; /* Borda um pouco mais arredondada */
             cursor: pointer;
             font-weight: 600;
             transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
             user-select: none;
             position: relative;     
-            font-size: 13px;    /* texto um pouco menor */
-            min-width: 80px;    /* largura mínima menor */
-            border-radius: 6px; /* borda um pouco mais arredondada */
+            font-size: 14px; /* Texto um pouco maior para melhor leitura */
+            min-width: 120px; /* Largura mínima para cada aba */
+            white-space: nowrap; /* Impede que o texto da aba quebre */
         }
+        /* --- Fim das alterações para abas --- */
+
         .tab:hover {
             background-color: rgba(0,123,255,0.35);
             color: #002752;
@@ -330,7 +338,7 @@
                 padding: 15px 20px;
             }
             .tabs {
-                flex-wrap: wrap;
+                flex-wrap: wrap; /* Pode voltar a quebrar se a tela for muito pequena */
                 justify-content: center;
                 margin-top: 15px;
             }
@@ -338,6 +346,7 @@
                 flex: none; /* Não cresce, mantém o tamanho do conteúdo */
                 width: auto;
                 padding: 10px 15px;
+                min-width: unset; /* Remove min-width em telas pequenas para quebrar melhor */
             }
             main {
                 margin: 30px auto;

@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Painel de Operações - Pizzattolog</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
   <style>
     /* CSS Geral e do Painel */
@@ -297,6 +298,15 @@
     </div>
     <div id="colaboradores-content" class="tab-content">
       <h2>COLABORADORES</h2>
+      <form id="formColaborador">
+        <input name="nome" placeholder="Nome" required>
+        <input name="cargo" placeholder="Cargo" required>
+        <input name="turno" placeholder="Turno" required>
+        <input name="foto" type="file" accept="image/png" required>
+        <button type="submit">Cadastrar</button>
+      </form>
+      <div id="listaColaboradores"></div>
+    </div>
     <div style="margin-bottom: 20px;">
                 <label for="filtroTurnoColaboradores">Filtrar por Turno:</label>
                 <select id="filtroTurnoColaboradores">
@@ -312,25 +322,33 @@
     </div>
     <div id="dialogos-content" class="tab-content">
       <h2>DIÁLOGOS DE SEGURANÇA</h2>
-      <!-- Content for diálogos as in original code -->
+      <form id="formDDS">
+        <input name="fotoDDS" type="file" accept="image/*" required>
+        <button type="submit">Enviar Foto DDS</button>
+      </form>
+      <div id="listaDDS"></div>
     </div>
+   
     <div id="descricao-content" class="tab-content">
       <h2>Descrição Operacional</h2>
       <p>Conteúdo de descrição operacional.</p>
     </div>
+   
     <div id="checklist-content" class="tab-content">
       <h2>CHECK LIST</h2>
       <p>Conteúdo da aba "Check List" em construção...</p>
     </div>
-    <div id="indicadores-content" class="tab-content">
+   
+   <div id="indicadores-content" class="tab-content">
       <h2>INDICADORES DE REGISTRO</h2>
       <canvas id="graficoIndicadores"></canvas>
     </div>
   </main>
 
   <script>
-    const tabs = document.querySelectorAll('.tab');
-    const tabContents = document.querySelectorAll('.tab-content');
+     const supabaseUrl = 'https://tzdogfvislvfiyepjpid.supabase.co';
+    const supabaseKey = 'processo . env . SUPABASE_KEY';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
@@ -343,7 +361,88 @@
         document.getElementById(`${tabName}-content`).classList.add('active');
       });
     });
+// Formulário Operacoes => Tabela "formulário"
+    document.getElementById("formulario-operacoes").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const dados = Object.fromEntries(form.entries());
+      const { error } = await supabase.from("formulário").insert([dados]);
+      alert(error ? "Erro ao salvar: " + error.message : "Operacao salva!");
+      if (!error) e.target.reset();
+    });
 
+    // Formulário Colaboradores => Tabela "colaboradores"
+    document.getElementById("formColaborador").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const file = form.get('foto');
+      const nomeArquivo = `${Date.now()}_${file.name}`;
+      const { error: uploadError } = await supabase.storage.from('colaboradores').upload(nomeArquivo, file);
+      if (uploadError) return alert("Erro ao subir imagem: " + uploadError.message);
+
+      const foto_url = `${supabaseUrl}/storage/v1/object/public/colaboradores/${nomeArquivo}`;
+      const { error } = await supabase.from('colaboradores').insert([{
+        nome: form.get('nome'),
+        cargo: form.get('cargo'),
+        turno: form.get('turno'),
+        foto_url
+      }]);
+      alert(error ? "Erro ao salvar colaborador: " + error.message : "Colaborador salvo!");
+    });
+
+    async function carregarColaboradores() {
+      const { data } = await supabase.from('colaboradores').select('*');
+      document.getElementById("listaColaboradores").innerHTML = data.map(c => `
+        <div style="border:1px solid #ccc; margin:10px; padding:10px;">
+          <img src="${c.foto_url}" width="100"><br>
+          <strong>${c.nome}</strong><br>
+          Cargo: ${c.cargo} | Turno: ${c.turno}
+        </div>`).join("");
+    }
+
+    carregarColaboradores();
+
+    // Form DDS => Tabela "dialogos_seguranca"
+    document.getElementById("formDDS").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const file = e.target.fotoDDS.files[0];
+      const nome = `dds_${Date.now()}_${file.name}`;
+      const { error: uploadError } = await supabase.storage.from('dds').upload(nome, file);
+      if (uploadError) return alert("Erro ao salvar DDS: " + uploadError.message);
+
+      const url = `${supabaseUrl}/storage/v1/object/public/dds/${nome}`;
+      await supabase.from('dialogos_seguranca').insert([{ url }]);
+      alert("DDS salvo!");
+      carregarDDS();
+    });
+
+    async function carregarDDS() {
+      const { data } = await supabase.from('dialogos_seguranca').select('*');
+      document.getElementById("listaDDS").innerHTML = data.map(d => `<img src="${d.url}" width="200" style="margin:10px;">`).join("");
+    }
+
+    carregarDDS();
+
+    // Indicadores => Baseado na tabela "formulário"
+    async function carregarIndicadores() {
+      const { data } = await supabase.from("formulário").select("*");
+      const carga = data.filter(d => d.carga_descarga === "carga").length;
+      const descarga = data.filter(d => d.carga_descarga === "descarga").length;
+
+      new Chart(document.getElementById("graficoIndicadores"), {
+        type: "bar",
+        data: {
+          labels: ["Carga", "Descarga"],
+          datasets: [{
+            label: "Operacoes",
+            data: [carga, descarga],
+            backgroundColor: ["#36A2EB", "#FF6384"]
+          }]
+        }
+      });
+    }
+
+    carregarIndicadores();
 
   </script>
 </body>
